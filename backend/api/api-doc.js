@@ -1,230 +1,324 @@
 module.exports = 
 {
-  "openapi": "3.0.0",
+  "openapi": "3.0.1",
   "info": {
-    "title": "Phase Sense API",
-    "description": "Serverside API for Phase Sense",
-    "license": {
-      "name": "Apache 2.0",
-      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-    },
-    "version": "1.0.0"
+    "title": "Signal Sense API",
+    "description": "This is the API for Signal Sense.<br>",
+    "version": "1.0"
   },
   "servers": [
     {
-      "url": "http://localhost:3000/",
-      "description": "Local Host"
+      "url": "http://localhost:3000",
+      "description": "Development server"
     },
     {
-      "url": "https://api_url_production",
-      "description": "Prod server"
-    }
-  ],
-  "tags": [
-    {
-      "name": "CRUD Operations",
-      "description": "Data input/output"
-    },
-    {
-      "name": "Admin API",
-      "description": "Operations for administrating the API"
+      "url": "http://ec2-3-141-8-69.us-east-2.compute.amazonaws.com:3000/",
+      "description": "Temp Staging server (hosted by Mike)"
     }
   ],
   "paths": {
-    "/getNodes":{
-      "get": {
-        "tags": [
-          "CRUD Operations"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/nodeArray"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/nodelights": {
-      "get": {
-        "tags": [
-          "CRUD Operations"
-        ],
+    "/api/node/setLights": {
+      "patch": {
+        "description": "Auto generated using Swagger Inspector",
         "parameters": [
           {
-            "name": "nodeId",
+            "name": "node_id",
             "in": "query",
-            "required": true,
-            "description": "The location of the node",
             "schema": {
-              "type": "integer",
-              "example": 1
-            }
+              "type": "string"
+            },
+            "example": "1"
           }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/lightArray"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/updateLight": {
-      "post": {
-        "tags": [
-          "CRUD Operations"
         ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/Light"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "sets the light state"
-          }
-        }
-      }
-    },
-    "/node":{
-      "post": {
-        "tags": [
-          "Admin API"
-        ],
-        "parameters": [
-          {
-            "name": "location",
-            "in": "query",
-            "required": true,
-            "description": "The location of the node",
-            "schema": {
-              "type": "string",
-              "example": "Northbound Lodi Av and Harney"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Node was created",
-            "content": {
-              "text/plain": {
-                "schema": {
-                  "type": "string",
-                  "example": "Added new node"
+                "type": "object",
+                "properties": {
+                  "lights": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "light_phase": {
+                          "type": "integer"
+                        },
+                        "id": {
+                          "type": "integer"
+                        },
+                        "state": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              },
+              "examples": {
+                "0": {
+                  "value": "{\r\n    \"lights\": [\r\n        {\"id\" : 1, \"light_phase\" : 3, \"state\" : \"GREEN\"},\r\n        {\"id\" : 2, \"light_phase\" : 3, \"state\" : \"GREEN\"},\r\n        {\"id\" : 3, \"light_phase\" : 3, \"state\" : \"GREEN\"}\r\n    ]\r\n}\r\n"
+                },
+                "1": {
+                  "value": "{\r\n    \"lights\": [\r\n        {\"id\" : 1, \"light_phase\" : 3, \"state\" : \"LEFT_GREEN\"},\r\n        {\"id\" : 2, \"light_phase\" : 3, \"state\" : \"GREEN\"},\r\n        {\"id\" : 3, \"light_phase\" : 3, \"state\" : \"GREEN\"}\r\n    ]\r\n}\r\n"
                 }
               }
             }
           }
+        },
+        "responses": {
+          "200": {
+            "description": "Auto generated using Swagger Inspector",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          },
+          {
+            "url": "http://ec2-3-141-8-69.us-east-2.compute.amazonaws.com:3000/"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://localhost:3000"
+        },
+        {
+          "url": "http://ec2-3-141-8-69.us-east-2.compute.amazonaws.com:3000/"
         }
-      }
+      ]
     },
-    "/node":{
-      "delete": {
-        "tags": [
-          "Admin API"
-        ],
+    "/api/node/light": {
+      "get": {
+        "description": "Auto generated using Swagger Inspector",
         "parameters": [
           {
             "name": "nodeId",
             "in": "query",
-            "required": true,
-            "description": "The ID of the node to remove",
             "schema": {
-              "type": "integer",
-              "example": 1
-            }
+              "type": "string"
+            },
+            "example": "1"
           }
         ],
         "responses": {
           "200": {
-            "description": "Node was removed",
+            "description": "Auto generated using Swagger Inspector",
             "content": {
-              "text/plain": {
+              "application/json; charset=utf-8": {
                 "schema": {
-                  "type": "string",
-                  "example": "removed the node"
+                  "type": "string"
                 }
               }
             }
           }
         }
-      }
-    }
-  },
-  "components": {
-    "schemas": {
-      "location": {
-        "type": "string"
       },
-      "node_id": {
-        "type": "integer"
-      },
-      "node":{
-        "type": "object",
-        "properties": {
-          "node_id": {
-            "$ref": "#/components/schemas/node_id"
-          },
-          "location": {
-            "$ref": "#/components/schemas/location"
-          }
-        }
-      },
-      "nodeArray": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/node"
-        }
-      },
-      "lightArray": {
-        "type": "array",
-        "items": {
-          "$ref": "#/components/schemas/lightArray_inner"
-        }
-      },
-      "Light": {
-        "type": "object",
-        "properties": {
-          "light_id": {
-            "type": "integer"
-          },
-          "node_id": {
-            "type": "integer"
-          },
-          "state": {
-            "type": "string"
-          },
-          "light_phase": {
-            "type": "integer"
+      "post": {
+        "description": "Auto generated using Swagger Inspector",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "light_phase": {
+                    "type": "integer"
+                  },
+                  "state": {
+                    "type": "string"
+                  },
+                  "node_id": {
+                    "type": "integer"
+                  }
+                }
+              },
+              "examples": {
+                "0": {
+                  "value": "    {\n        \"node_id\": 2,\n        \"state\": \"GREEN\",\n        \"light_phase\": 0\n    }"
+                }
+              }
+            }
           }
         },
-        "description": "A traffic light object"
+        "responses": {
+          "200": {
+            "description": "Auto generated using Swagger Inspector",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          },
+          {
+            "url": "http://ec2-3-141-8-69.us-east-2.compute.amazonaws.com:3000/"
+          }
+        ]
       },
-      "lightArray_inner": {
-        "type": "object",
-        "properties": {
-          "light": {
-            "$ref": "#/components/schemas/Light"
+      "servers": [
+        {
+          "url": "http://localhost:3000"
+        },
+        {
+          "url": "http://ec2-3-141-8-69.us-east-2.compute.amazonaws.com:3000/"
+        }
+      ]
+    },
+    "/api/node/admin": {
+      "patch": {
+        "description": "Auto generated using Swagger Inspector",
+        "parameters": [
+          {
+            "name": "nodeId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": "1"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ipaddress": {
+                    "type": "string"
+                  },
+                  "isalive": {
+                    "type": "integer"
+                  },
+                  "location": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "0": {
+                  "value": "    {\n        \"location\": \"EASTBOUND HW 88 and Macville\",\n        \"ipaddress\": \"1932.168.1.1\",\n        \"isalive\": 1\n    }"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Auto generated using Swagger Inspector",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
           }
         }
-      }
+      },
+      "post": {
+        "description": "Auto generated using Swagger Inspector",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "ipaddress": {
+                    "type": "string"
+                  },
+                  "isalive": {
+                    "type": "integer"
+                  },
+                  "location": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "0": {
+                  "value": "    {\n        \"location\": \"NORTHBOUND HW 88 and Macville\",\n        \"ipaddress\": \"1932.168.1.1\",\n        \"isalive\": 1\n    }"
+                },
+                "1": {
+                  "value": "    {\n        \"location\": \"EASTBOUND HW 88 and Macville\",\n        \"ipaddress\": \"1932.168.1.1\",\n        \"isalive\": 1\n    }"
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Auto generated using Swagger Inspector",
+            "content": {
+              "application/json; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          }
+        ]
+      },
+      "delete": {
+        "description": "Auto generated using Swagger Inspector",
+        "parameters": [
+          {
+            "name": "nodeId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "example": "2"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Auto generated using Swagger Inspector",
+            "content": {
+              "text/html; charset=utf-8": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        },
+        "servers": [
+          {
+            "url": "http://localhost:3000"
+          },
+          {
+            "url": "http://ec2-3-141-8-69.us-east-2.compute.amazonaws.com:3000/"
+          }
+        ]
+      },
+      "servers": [
+        {
+          "url": "http://localhost:3000"
+        },
+        {
+          "url": "http://ec2-3-141-8-69.us-east-2.compute.amazonaws.com:3000/"
+        }
+      ]
     }
   }
 };
