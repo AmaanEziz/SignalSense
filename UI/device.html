@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title>Phase Sense</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/favicon.ico" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="css/styles.css" rel="stylesheet" />
+    </head>
+    <body>
+        <!-- Responsive navbar-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container">
+                <a class="navbar-brand" href="index.html">Phase Sense</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.html">Home</a></li>
+                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="device.html">Device</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <!-- Page content-->
+        <div class="container">
+            <div class="text-center mt-5">
+                <h1>Device ID: <span id='selected-device'>Raspberry Pi 01</span></h1>
+                <!-- <p id="selected-device">1</p> -->
+                <!-- Carouse section style="height: 300px;" -->
+                <div id="carouselExampleIndicators"class="carousel slide" data-interval="false" data-ride="carousel" data-pause="hover">
+                    <div class="carousel-indicators">
+                      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                    </div>
+                    <div class="carousel-inner">
+                      <div class="carousel-item active">
+                        <img src="assets/intersection-1.png" class="d-block w-100" alt="intersection-1-image" >
+                      </div>
+                      <div class="carousel-item">
+                        <img src="assets/intersection-1.png" class="d-block w-100" alt="intersection-2-image">
+                      </div>
+                      <div class="carousel-item">
+                        <img src="assets/intersection-1.png" class="d-block w-100" alt="intersection-3-image"> 
+                      </div>
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                      <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+
+                <!-- Arrow Phase -->
+                <div class="row" style="margin-top: 5%; margin-left: 2%;">
+                    <div class="col">
+                      <img src="assets/left-red.png">
+                      <div class="row"><h5>Phase 1</h5></div>
+                    </div>
+                    <div class="col">
+                      <img src="assets/straight-green.png">
+                      <img src="assets/straight-green.png">
+                      <div class="row"><h5>Phase 6</h5></div>
+                    </div>
+                    <div class="col">
+                      <img src="assets/right-green.png">
+                      <div class="row"><h5>Phase 6</h5></div>
+                    </div>
+                </div>
+
+                <!-- Table -->
+                <table class="table table-hover" style="margin-top: 5%; border-radius: 0.5em;">
+                    <thead>
+                      <tr style="margin-top: 5%; left:100px;">
+                        <th scope="col">Light ID</th>
+                        <th scope="col">Status</th>
+                        <th scope="col">Phase</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <td scope="row">1</td>
+                        <td>Red</td>
+                        <td><button class="btn btn-outline-secondary">1</button></td>
+                      </tr>
+                      <tr>
+                        <td scope="row">2</td>
+                        <td>Green</td>
+                        <td><button class="btn btn-outline-secondary">6</button></td>
+                      </tr>
+                      <tr>
+                        <td scope="row">3</td>
+                        <td>Green</td>
+                        <td><button class="btn btn-outline-secondary">6</button></td>
+                      </tr>
+                    </tbody>
+                  </table>
+
+            </div>
+        </div>
+        <!-- Bootstrap core JS-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="src/app.js"></script>
+    </body>
+</html>
