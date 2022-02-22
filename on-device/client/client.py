@@ -1,37 +1,50 @@
 from socket import *
 import json
 
-# Opening JSON file
-with open('data.json', 'r') as openfile:
-  
-    # Reading from json file
-    json_data = json.load(openfile)
+# Define Server Name
+serverName = 'ec2-3-141-8-69.us-east-2.compute.amazonaws.com' 
 
-data = json.dumps(json_data)
+# Define the server port number
+serverPort = 3000
 
-#Define Server Name and Port
-serverName = '' #INSERT YOU IP ADDRESS HERE
+# Create the GET request for the home page
+request = "GET / HTTP/1.1\r\nHost:%s\r\n\r\n" % serverName
 
-#Port Number must match the server port number
-serverPort = 2488
-
-#Setup the socket
+# Setup the socket, and connect to server
 clientSocket = socket(AF_INET, SOCK_STREAM)
-clientSocket.connect((serverName, serverPort))
 
-#Send encoded data
-clientSocket.send(bytes(data, "utf-8"))
+# Try and Catch block to catch errors thrown by socket module
+try:
+    clientSocket.connect((serverName, serverPort))
 
-#Wait for reponse with new data
-new_data = clientSocket.recv(1024)
+    # Send Request
+    clientSocket.send(bytes(request, "utf-8"))
 
-#decode and convert to json object
-new_data = new_data.decode()
-new_data = json.loads(new_data)
+    # Store the response sent by the server
+    resp = clientSocket.recv(1024)
 
+    # Decode the response and print to the console the
+    # response.
+    resp = resp.decode()
+    print(resp)
+except socket.timeout as err :
+    print('Socket timeout.')
+except socket.error as err :
+    print('There was issue with the socket. Check IP address and port number are correct.')
+finally: 
+    #close the socket
+    clientSocket.close()
+
+
+# -------- Code from previous commit thats is not need right now. --------
+# NOT NEED CURRENTLY
+# Opening JSON file
+#with open('data.json', 'r') as openfile:
+    # Reading from json file
+#    json_data = json.load(openfile)
+#data = json.dumps(json_data)
+
+# NOT NEED CURRENTLY
 #write the new data
-with open("new_data.json", "w") as outfile:
-    json.dump(new_data, outfile)
-
-#close the socket
-clientSocket.close()
+#with open("new_data.json", "w") as outfile:
+#    json.dump(new_data, outfile)
