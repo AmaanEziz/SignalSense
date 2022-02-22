@@ -1,6 +1,6 @@
 var $dropdown = $("#device-option");
 
-$.getJSON('http://ec2-3-141-8-69.us-east-2.compute.amazonaws.com:3000/api/node/list', function(data){
+$.getJSON('https://signalsense.link/api/node/list', function(data){
     console.log(data);
 
     $.each(data, function(){

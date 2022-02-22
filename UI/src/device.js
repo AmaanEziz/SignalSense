@@ -6,8 +6,8 @@ var selectedLight = 0;
 
 
 var $deviceLocation = $("#selected-device");
-$.getJSON(`http://ec2-3-141-8-69.us-east-2.compute.amazonaws.com:3000/api/node/?nodeId=${deviceId}`, function(data){
-    console.log(`http://ec2-3-141-8-69.us-east-2.compute.amazonaws.com:3000/api/node/?nodeId=${deviceId}`);
+$.getJSON(`https://signalsense.link/api/node/?nodeId=${deviceId}`, function(data){
+    console.log(`https://signalsense.link/api/node/?nodeId=${deviceId}`);
 
 
     $.each(data, function(){
@@ -15,7 +15,7 @@ $.getJSON(`http://ec2-3-141-8-69.us-east-2.compute.amazonaws.com:3000/api/node/?
     });
 });
 
-$.getJSON(`http://ec2-3-141-8-69.us-east-2.compute.amazonaws.com:3000/api/node/light?nodeId=${deviceId}` , function(data) {
+$.getJSON(`https://signalsense.link/api/node/light?nodeId=${deviceId}` , function(data) {
     console.log(data);
     var tbl_body = document.createElement("tbody");
     $.each(data, function() {
@@ -38,7 +38,7 @@ function changePhase(){
     var phaseNum = $('#newPhaseId').val();
     $.ajax({
         type: "PATCH",
-        url: "http://ec2-3-141-8-69.us-east-2.compute.amazonaws.com:3000/api/node/light",
+        url: "https://signalsense.link/api/node/light",
         data: JSON.stringify({id : selectedLight, light_phase : phaseNum }),
         contentType: "application/json; charset=utf-8",
         datatype: "jsondata",
