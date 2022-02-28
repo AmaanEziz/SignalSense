@@ -16,7 +16,7 @@ $.getJSON(`https://signalsense.link/api/node/?nodeId=${deviceId}`, function(data
 });
 
 $.getJSON(`https://signalsense.link/api/node/light?nodeId=${deviceId}` , function(data) {
-    console.log(data);
+    // console.log(data);
     var tbl_body = document.createElement("tbody");
     $.each(data, function() {
         var tbl_row = tbl_body.insertRow();
@@ -31,7 +31,72 @@ $.getJSON(`https://signalsense.link/api/node/light?nodeId=${deviceId}` , functio
     });
     $("#light-table").append(tbl_body);   //DOM table doesn't have .appendChild
     addRowHandlers();
+    updateArrowPhase(data);
 });
+
+function updateArrowPhase(data) {
+    console.log(data);
+    var arrowPhase = document.getElementById("arrow-phase");
+    
+    $.each(data, function(k, v) {
+        var colDiv = document.createElement("div");
+        colDiv.setAttribute("class", "col");
+
+        var phaseImg = document.createElement("img");
+        var phaseImgSource = updatePhaseImg(v);
+        phaseImg.setAttribute("src", phaseImgSource);
+        colDiv.append(phaseImg);
+
+        var rowDiv = document.createElement("div");
+        rowDiv.setAttribute("class", "row");
+
+        var phaseLable = document.createElement('h5');
+        phaseLable.innerHTML = 'Phase ' + v.light_phase;  // update phase number
+
+        rowDiv.append(phaseLable);
+        colDiv.append(rowDiv);
+        arrowPhase.append(colDiv);
+    });
+
+    // console.log(arrowPhase);
+}
+
+function updatePhaseImg(dataValue) {
+    var imgSource = "";
+    var state = dataValue.state;
+    // console.log(state + ' ');
+    switch (state){
+        case 'RED':
+            imgSource = "assets/straight-red.png";
+            break;
+        case 'GREEN':
+            imgSource = "assets/straight-green.png";
+            break;
+        case 'YELLOW':
+            imgSource = "assets/straight-yellow.png";
+            break;
+        case 'LEFT_RED':
+            imgSource = "assets/left-red.png";
+            break;
+        case 'LEFT_GREEN':
+            imgSource = "assets/left-green.png";
+            break;
+        case 'LEFT_YELLOW':
+            imgSource = "assets/left-yellow.png";
+            break;
+        case 'RIGHT_RED':
+            imgSource = "assets/right-red.png";
+            break;
+        case 'RIGHT_GREEN':
+            imgSource = "assets/right-green.png";
+            break;
+        case 'RIGHT_YELLOW':
+            imgSource = "assets/right-yellow.png";
+            break;  
+    }
+
+    return imgSource;
+}
 
 function changePhase(){
 
