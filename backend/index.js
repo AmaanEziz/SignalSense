@@ -128,5 +128,8 @@ app.get("/nodelights", async (req, res) => {
 
 const Node = require('./models/NodeModel');
 const nodeRouter = require('./routes/nodeRouter')(Node);
-
 app.use('/api/node', nodeRouter);
+
+const fileRouter = require('./routes/fileRouter')();
+
+app.use('/api/nodeImages/', fileRouter);

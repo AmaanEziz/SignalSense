@@ -7,6 +7,8 @@ function routes(Node){
     const nodeController = NodeController(Node);
     const lightController = LightController();
 
+    nodeRouter.route('/getImage')
+        .get(nodeController.fetchImage)
 
     nodeRouter.route('/list')
         .get(nodeController.getAll);
