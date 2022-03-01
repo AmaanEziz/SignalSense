@@ -1,5 +1,7 @@
 
 const pool = require('../dbconfig');
+
+
 function nodeController(Node) {
   function getAll(req, res) {
     const query = "SELECT * FROM node";
@@ -106,9 +108,25 @@ function nodeController(Node) {
     });
   };
 
+  function uploadImage(req, res, next) {
+    if (req.query.nodeId == null) {
+      return res.status(400).send('Missing query pram nodeId ');
+    }
+    const query = 'call update_node_image(?)';
+    pool.query(query, [req.query.nodeId], (error, results) => {
+      if (error) {
+        console.log(error);
+        return res.status(500).json(error);
+      } else {
+        console.log(results[1][0]);
+        req.fileName = results[1][0].fileName;
+        return next();
+      }
+    });
 
+  }
 
-  return { getAll, post, remove, patch, getOne, fetchImage };
+  return { getAll, post, remove, patch, getOne, fetchImage, uploadImage };
 
 
 }

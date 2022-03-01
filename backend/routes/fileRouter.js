@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const controller = require("../controllers/fileController");
-function routes(temp){
+function routes(temp) {
     router.post("/upload", controller.upload);
     router.get("/files", controller.getListFiles);
     router.get("/files/:name", controller.download);

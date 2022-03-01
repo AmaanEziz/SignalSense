@@ -8,8 +8,9 @@ let storage = multer.diskStorage({
     cb(null, userHome + "/SignalSenseFiles/resources/static/assets/uploads/");
   },
   filename: (req, file, cb) => {
-    console.log(file.originalname);
-    cb(null, file.originalname);
+    let filename = req.fileName;
+    console.log(`File name recived by upload.js ${filename}`);
+    cb(null, filename);
   },
 });
 let uploadFile = multer({
