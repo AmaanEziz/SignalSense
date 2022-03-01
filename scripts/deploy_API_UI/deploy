@@ -1,0 +1,26 @@
+
+#!/bin/sh
+
+# Add npm to path
+/home/deployer/.nvm/nvm.sh
+
+# stop node.js
+killall node
+
+# download the latest and code changes
+cd Phase-Sense/
+git pull
+
+
+# Copy UI files to html dir
+sudo cp /home/deployer/Phase-Sense/UI/. /var/www/signalsense/ -r
+
+
+# start nodejs
+
+cd backend
+npm install
+nohup node index.js. > /dev/null 2>&1 &
+
+sleep 3
+echo deploy success
