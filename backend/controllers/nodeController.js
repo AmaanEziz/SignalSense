@@ -1,5 +1,7 @@
 
 const pool = require('../dbconfig');
+
+
 function nodeController(Node) {
   function getAll(req, res) {
     const query = "SELECT * FROM node";
@@ -34,7 +36,7 @@ function nodeController(Node) {
     }
   };
   function post(req, res) {
-    const {location, ipaddress, isalive} = req.body;
+    const { location, ipaddress, isalive } = req.body;
     if (location == null) {
       return res.status(400).send('Missing location from json');
     } else if (ipaddress == null) {
@@ -71,7 +73,7 @@ function nodeController(Node) {
     }
   };
   function patch(req, res) {
-    const {location, ipaddress, isalive} = req.body;
+    const { location, ipaddress, isalive } = req.body;
     if (req.query.nodeId == null) {
       return res.status(401).send('Missing query pram nodeId ');
     }
@@ -87,7 +89,44 @@ function nodeController(Node) {
     });
   };
 
-  return { getAll, post, remove, patch, getOne};
+  function fetchImage(req, res) {
+    if (req.query.nodeId == null) {
+      return res.status(400).send('Missing query pram nodeId ');
+    }
+    const query = "CALL GET_IMAGE_URL(?)";
+    pool.query(query, [req.query.nodeId], (error, results) => {
+      if (error) {
+        console.log(error);
+        return res.redirect('/api/nodeImages/files/something_went_wrong.pineapple.png');
+      }
+      else if (results[1][0].fileName == null) {
+        return res.redirect('/api/nodeImages/files/something_went_wrong.pineapple.png');
+      } else {
+        var path = '/api/nodeImages/files/' + results[1][0].fileName;
+        return res.redirect(path);
+      }
+    });
+  };
+
+  function uploadImage(req, res, next) {
+    if (req.query.nodeId == null) {
+      return res.status(400).send('Missing query pram nodeId ');
+    }
+    const query = 'call update_node_image(?)';
+    pool.query(query, [req.query.nodeId], (error, results) => {
+      if (error) {
+        console.log(error);
+        return res.status(500).json(error);
+      } else {
+        console.log(results[1][0]);
+        req.fileName = results[1][0].fileName;
+        return next();
+      }
+    });
+
+  }
+
+  return { getAll, post, remove, patch, getOne, fetchImage, uploadImage };
 
 
 }

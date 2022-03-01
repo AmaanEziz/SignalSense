@@ -1,4 +1,4 @@
-function NodeModel(){
+function NodeModel() {
     this.id = null;
     this.location = null;
 }
