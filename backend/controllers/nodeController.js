@@ -99,10 +99,10 @@ function nodeController(Node) {
         console.log(error);
         return res.redirect('/api/nodeImages/files/something_went_wrong.pineapple.png');
       }
-      else if (results[1].fileName == null) {
+      else if (results[1][0].fileName == null) {
         return res.redirect('/api/nodeImages/files/something_went_wrong.pineapple.png');
       } else {
-        var path = '/api/nodeImages/files/' + results[1].fileName;
+        var path = '/api/nodeImages/files/' + results[1][0].fileName;
         return res.redirect(path);
       }
     });
