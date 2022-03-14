@@ -13,13 +13,11 @@ $.getJSON(`https://signalsense.link/api/node/?nodeId=${deviceId}`, function(data
 });
 
 $.getJSON(`https://signalsense.link/api/node/light?nodeId=${deviceId}` , function(data) {
-    // console.log(data);
     console.log(`https://signalsense.link/api/node/getImage?nodeId=${deviceId}`);
     var tbl_body = document.createElement("tbody");
     $.each(data, function() {
         var tbl_row = tbl_body.insertRow();
         tbl_row.id = this.id;
-        // tbl_row.onclick = 'chooseRow()';
         $.each(this, function(k , v) {
             if(k!="id"){
                 var cell = tbl_row.insertCell();
@@ -59,13 +57,11 @@ function updateArrowPhase(data) {
         arrowPhase.append(colDiv);
     });
 
-    // console.log(arrowPhase);
 }
 
 function updatePhaseImg(dataValue) {
     var imgSource = "";
     var state = dataValue.state;
-    // console.log(state + ' ');
     switch (state){
         case 'RED':
             imgSource = "assets/straight-red.png";
@@ -119,11 +115,6 @@ function changePhase(){
     }
     );
 };
-
-// function chooseRow(){
-//     alert('I AM THE ONE!');
-// }
-
 
 function addRowHandlers() {
     var table = document.getElementById("light-table");
