@@ -1,6 +1,7 @@
 go             0
 goLeft         1
-stop           2
-stopLeft       3
-warning        4
-warningLeft    5
+goForward      2
+stop           3
+stopLeft       4
+warning        5
+warningLeft    6

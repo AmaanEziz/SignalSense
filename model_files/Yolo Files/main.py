@@ -5,10 +5,52 @@
 # https://www.kaggle.com/mbornoe/lisa-traffic-light-dataset/metadata extract archive to /dataset/
 
 import os
+import shutil
 
 import pandas as pd
 import yaml
 from PIL import Image
+
+
+def setup():
+    # If dataset is not downloaded into correct directory, stop
+    if not os.path.exists('./dataset'):
+        print('dataset directory does not exist')
+        print('please download dataset and extract into ./dataset')
+        print('https://www.kaggle.com/mbornoe/lisa-traffic-light-dataset/metadata')
+        exit()
+
+    # Clone yolov5 repo (if not already downloaded here)
+    if os.path.exists('./yolov5'):
+        print('yolov5 repo already exists')
+    else:
+        os.system("git clone https://github.com/ultralytics/yolov5")
+    if not os.path.exists('./yolov5'):
+        print('yolov5 repo not downloaded correctly.')
+        exit()
+
+    # Setup directories
+    if not os.path.exists('./yolo_data'):
+        os.mkdir('./yolo_data')
+        print('yolo_data directory created')
+    if not os.path.exists('./yolo_data/train'):
+        os.mkdir('./yolo_data/train')
+        print('yolo_data/train directory created')
+    if not os.path.exists('./yolo_data/test'):
+        os.mkdir('./yolo_data/test')
+        print('yolo_data/test directory created')
+    if not os.path.exists('./yolo_data/val'):
+        os.mkdir('./yolo_data/val')
+        print('yolo_data/val directory created')
+
+    # Create label mapping file for reference
+    print("Generating label mapping file")
+    with open('./label_map.txt', 'w') as f:
+        f.truncate()
+        for x in ['go', 'goLeft', 'goForward', 'stop', 'stopLeft', 'warning', 'warningLeft']:
+            f.write(x.ljust(15) + str(encode_annotation(x)) + '\n')
+    print("Label mapping file generated")
+    print("Setup complete\n")
 
 
 def encode_annotation(annotation):
@@ -22,7 +64,7 @@ def encode_annotation(annotation):
         if annotation in annotation_list:
             return annotation_list.index(annotation)
         else:
-            print('Annotation not found in dataset.yaml')
+            print('Annotation not found in dataset.yaml: {}'.format(annotation))
             return None  # Return None if annotation not found
 
 
@@ -42,7 +84,7 @@ def convert_annotations(img_filepath, xmin, xmax, ymin, ymax, annotation):
     annotation_width = (xmax - xmin) / width  # Calculate annotation width
     annotation_height = (ymax - ymin) / height  # Calculate annotation height
     center_x = ((xmax + xmin) / 2) / width  # Calculate annotation center x
-    center_y = ((ymax + ymin) / 2) / height  # Calculate annotation center y
+    center_y = (((ymax + ymin) / 2) / height)  # Calculate annotation center y. Invert y because yolo y0 is on top
     return annotation_width, annotation_height, center_x, center_y, annotation
 
 
@@ -62,20 +104,22 @@ def create_annotations(csv_filepath, annotations_output_dir):
         for row_index, row in df_group.iterrows():  # iterate rows of each group
             xmin = row['Upper left corner X']
             xmax = row['Lower right corner X']
-            ymax = row['Upper left corner Y']
-            ymin = row['Lower right corner Y']
+            ymin = row['Upper left corner Y']  # Note: ymin and ymax are reversed in the dataset
+            ymax = row['Lower right corner Y']  # Note: ymin and ymax are reversed in the dataset
             annotation = row['Annotation tag']
 
-            if group_name.contains('Train'):
-                if group_name.contains('day'):
+            if 'Train' in group_name:
+                if 'day' in group_name:
                     img_filepath = './dataset/dayTrain/dayTrain/' + \
                                    group_name.split('/')[-1].split('-')[0] + '/frames/' + file_name
                 else:
                     img_filepath = './dataset/nightTrain/nightTrain/' + \
                                    group_name.split('/')[-1].split('-')[0] + '/frames/' + file_name
-            elif group_name.contains('Test'):
-                # TODO - finish test annotation image finding
-            else: # If not in train or test, skip
+            elif 'Test' in group_name:
+                img_filepath = './dataset/' + group_name.split('/')[-1].split('-')[0] + \
+                               '/' + group_name.split('/')[-1].split('-')[0] + \
+                               '/frames/' + file_name
+            else:  # If not in train or test, skip
                 break
 
             annotation_width, annotation_height, center_x, center_y, annotation_encoded = convert_annotations(
@@ -101,34 +145,42 @@ def create_annotations(csv_filepath, annotations_output_dir):
                     str(width[row]) + ' ' +
                     str(height[row]) + '\n'
                 )
-        # TODO copy image to output directory
+        shutil.copyfile(img_filepath, annotations_output_dir + '/' + file_name)  # Copy image to output directory
 
 
-
-# Clone yolov5 repo (if not already downloaded here)
-if os.path.exists('./yolov5'):
-    print('yolov5 repo already exists')
-else:
-    os.system("git clone https://github.com/ultralytics/yolov5")
-
-# Create label mapping file for reference
-print("Generating label mapping file")
-with open('./label_map.txt', 'w') as f:
-    f.truncate()
-    for x in ['go', 'goLeft', 'stop', 'stopLeft', 'warning', 'warningLeft']:
-        f.write(x.ljust(15) + str(encode_annotation(x)) + '\n')
-print("Label mapping file generated")
-
+setup()
 # Process training data
-overall_path = ['./dataset/Annotations/Annotations/dayTrain', './dataset/Annotations/Annotations/nightTrain']
+overall_path = ['./dataset/annotations/annotations/daytrain', './dataset/annotations/annotations/nighttrain']
 for train_path in overall_path:
     train_clips = os.listdir(train_path)
     for clip in train_clips:
         if not clip.startswith('.'):
-            print("Generating annotations for clip: " + clip)
-            filepath = os.path.join(train_path, clip, 'frameAnnotationsBOX.csv')
+            print("generating annotations for clip: " + clip)
+            filepath = os.path.join(train_path, clip, 'frameannotationsbox.csv')
             output_dir = './yolo_data/train'
             create_annotations(
                 csv_filepath=filepath,
                 annotations_output_dir=output_dir)
-            print("Annotations Generated.")
+            print(clip + " annotations generated.")
+
+# Generate test data
+overall_path = ['./dataset/Annotations/Annotations/daySequence1', './dataset/Annotations/Annotations/nightSequence1']
+for test_path in overall_path:
+    print("generating annotations for clip: " + test_path)
+    filepath = os.path.join(test_path, 'frameannotationsbox.csv')
+    output_dir = './yolo_data/test'
+    create_annotations(
+        csv_filepath=filepath,
+        annotations_output_dir=output_dir)
+    print(test_path + " annotations generated.")
+
+# Generate test data
+overall_path = ['./dataset/Annotations/Annotations/daySequence2', './dataset/Annotations/Annotations/nightSequence2']
+for val_path in overall_path:
+    print("generating annotations for clip: " + val_path)
+    filepath = os.path.join(val_path, 'frameannotationsbox.csv')
+    output_dir = './yolo_data/val'
+    create_annotations(
+        csv_filepath=filepath,
+        annotations_output_dir=output_dir)
+    print(val_path + " annotations generated.")
