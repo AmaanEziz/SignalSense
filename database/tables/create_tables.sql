@@ -6,149 +6,148 @@ SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,N
 -- Schema mydb
 -- -----------------------------------------------------
 -- -----------------------------------------------------
--- Schema Initial
--- -----------------------------------------------------
+-- Schema signal_dev1-- -----------------------------------------------------
 
 -- -----------------------------------------------------
--- Schema Initial
--- -----------------------------------------------------
-CREATE SCHEMA IF NOT EXISTS `Initial` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
-USE `Initial` ;
+-- Schema signal_dev1-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS signal_dev1 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci ;
+USE signal_dev1 ;
 
 -- -----------------------------------------------------
--- Table `Initial`.`Intersection`
+-- Table signal_dev1.Intersection
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Initial`.`Intersection` (
-  `intersectionID` VARCHAR(36) NOT NULL,
-  `latitude` DECIMAL(3,0) NULL DEFAULT NULL,
-  `longitude` DECIMAL(3,0) NULL DEFAULT NULL,
-  PRIMARY KEY (`intersectionID`))
+CREATE TABLE IF NOT EXISTS signal_dev1.Intersection (
+  intersectionID VARCHAR(36) NOT NULL,
+  latitude DECIMAL(3,3) NULL DEFAULT NULL,
+  longitude DECIMAL(3,3) NULL DEFAULT NULL,
+  PRIMARY KEY (intersectionID))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `Initial`.`Street`
+-- Table signa_dev1.Street
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Initial`.`Street` (
-  `streetID` VARCHAR(36) NOT NULL,
-  `streetName` VARCHAR(45) NULL DEFAULT NULL,
-  `streetDirection` VARCHAR(45) NULL DEFAULT NULL,
-  `beginLatitude` DECIMAL(3,0) NULL DEFAULT NULL,
-  `beginLongitude` DECIMAL(3,0) NULL DEFAULT NULL,
-  `endLatitude` DECIMAL(3,0) NULL DEFAULT NULL,
-  `endLongitude` DECIMAL(3,0) NULL DEFAULT NULL,
-  PRIMARY KEY (`streetID`))
+CREATE TABLE IF NOT EXISTS signal_dev1.Street (
+  streetID VARCHAR(36) NOT NULL,
+  streetName VARCHAR(45) NULL DEFAULT NULL,
+  streetDirection VARCHAR(45) NULL DEFAULT NULL,
+  beginLatitude DECIMAL(3,3) NULL DEFAULT NULL,
+  beginLongitude DECIMAL(3,3) NULL DEFAULT NULL,
+  endLatitude DECIMAL(3,3) NULL DEFAULT NULL,
+  endLongitude DECIMAL(3,3) NULL DEFAULT NULL,
+  PRIMARY KEY (streetID))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `Initial`.`IntersectionStreet`
+-- Table signal_dev1.IntersectionStreet
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Initial`.`IntersectionStreet` (
-  `intersectionStreetID` VARCHAR(36) NOT NULL,
-  `intersectionID` VARCHAR(36) NULL DEFAULT NULL,
-  `streetID` VARCHAR(36) NULL DEFAULT NULL,
-  `streetPostmile` DECIMAL(2,0) NULL DEFAULT NULL,
-  PRIMARY KEY (`intersectionStreetID`),
-  INDEX `intStreetIntFK_idx` (`intersectionID` ASC) VISIBLE,
-  INDEX `intStreetStreetFK_idx` (`streetID` ASC) VISIBLE,
-  CONSTRAINT `intStreetIntFK`
-    FOREIGN KEY (`intersectionID`)
-    REFERENCES `Initial`.`Intersection` (`intersectionID`),
-  CONSTRAINT `intStreetStreetFK`
-    FOREIGN KEY (`streetID`)
-    REFERENCES `Initial`.`Street` (`streetID`))
+CREATE TABLE IF NOT EXISTS signal_dev1.IntersectionStreet (
+  intersectionStreetID VARCHAR(36) NOT NULL,
+  intersectionID VARCHAR(36) NULL DEFAULT NULL,
+  streetID VARCHAR(36) NULL DEFAULT NULL,
+  streetPostmile DECIMAL(3,2) NULL DEFAULT NULL,
+  PRIMARY KEY (intersectionStreetID),
+  INDEX intStreetIntFK_idx (intersectionID ASC) VISIBLE,
+  INDEX intStreetStreetK_idx (streetID ASC) VISIBLE,
+  CONSTRAINT intStreetIntFK
+    FOREIGN KEY (intersectionID)
+    REFERENCES signal_dev1.Intersection (intersectionID),
+  CONSTRAINT intStreetStreetFK
+    FOREIGN KEY (streetID)
+    REFERENCES signal_dev1.Street (streetID))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `Initial`.`Node`
+-- Table signal_dev1.Node
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Initial`.`Node` (
-  `nodeID` VARCHAR(36) NOT NULL,
-  `nodeDescription` VARCHAR(100) NULL DEFAULT NULL,
-  `intersectionID` VARCHAR(36) NULL DEFAULT NULL,
-  `ipAddress` VARCHAR(20) NULL DEFAULT NULL,
-  `isAlive` BINARY(1) NULL DEFAULT NULL,
-  PRIMARY KEY (`nodeID`),
-  INDEX `nodeIntersectionFK_idx` (`intersectionID` ASC) VISIBLE,
-  CONSTRAINT `nodeIntersectionFK`
-    FOREIGN KEY (`intersectionID`)
-    REFERENCES `Initial`.`Intersection` (`intersectionID`))
+CREATE TABLE IF NOT EXISTS signal_dev1.Node (
+  nodeID VARCHAR(36) NOT NULL,
+  nodeDescription VARCHAR(100) NULL DEFAULT NULL,
+  intersectionID VARCHAR(36) NULL DEFAULT NULL,
+  ipAddress VARCHAR(20) NULL DEFAULT NULL,
+  isAlive BINARY(1) NULL DEFAULT NULL,
+  PRIMARY KEY (nodeID),
+  INDEX nodeIntersectionFK_idx (intersectionID ASC) VISIBLE,
+  CONSTRAINT nodeIntersectionFK
+    FOREIGN KEY (intersectionID)
+    REFERENCES signal_dev1.Intersection (intersectionID))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `Initial`.`LightStateRef`
+-- Table signal_dev1.LightStateRef
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Initial`.`LightStateRef` (
-  `lightStateRefID` VARCHAR(36) NOT NULL,
-  `state` VARCHAR(100) NOT NULL,
-  PRIMARY KEY (`lightStateRefID`))
+CREATE TABLE IF NOT EXISTS signal_dev1.LightStateRef (
+  lightStateRefID VARCHAR(36) NOT NULL,
+  state VARCHAR(100) NOT NULL,
+  PRIMARY KEY (lightStateRefID))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `Initial`.`Light`
+-- Table signal_dev1.Light
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Initial`.`Light` (
-  `lightID` VARCHAR(36) NOT NULL,
-  `nodeID` VARCHAR(36) NULL DEFAULT NULL,
-  `lightPhase` VARCHAR(45) NULL DEFAULT NULL,
-  `lightTypeID` INT NULL DEFAULT NULL,
-  `state` VARCHAR(100) NULL DEFAULT NULL,
-  PRIMARY KEY (`lightID`),
-  INDEX `lightNodeFK_idx` (`nodeID` ASC) VISIBLE,
-  INDEX `lightStateFK_idx` (`state` ASC) VISIBLE,
-  CONSTRAINT `lightNodeFK`
-    FOREIGN KEY (`nodeID`)
-    REFERENCES `Initial`.`Node` (`nodeID`),
-  CONSTRAINT `lightStateFK`
-    FOREIGN KEY (`state`)
-    REFERENCES `Initial`.`LightStateRef` (`lightStateRefID`))
+CREATE TABLE IF NOT EXISTS signal_dev1.Light (
+  lightID VARCHAR(36) NOT NULL,
+  nodeID VARCHAR(36) NULL DEFAULT NULL,
+  lightPhase INT NULL DEFAULT NULL,
+  lightRowID INT NULL DEFAULT NULL,
+  state VARCHAR(100) NULL DEFAULT NULL,
+  PRIMARY KEY (lightID),
+  INDEX lightNodeFK_idx (nodeID ASC) VISIBLE,
+  INDEX lightStateFK_idx (state ASC) VISIBLE,
+  CONSTRAINT lightNodeFK
+    FOREIGN KEY (nodeID)
+    REFERENCES signal_dev1.Node (nodeID),
+  CONSTRAINT lightStateFK
+    FOREIGN KEY (state)
+    REFERENCES signal_dev1.LightStateRef (lightStateRefID))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `Initial`.`PhaseType`
+-- Table signal_dev1.PhaseType
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Initial`.`PhaseType` (
-  `phaseTypeID` VARCHAR(36) NOT NULL,
-  `phaseTypeDescription` VARCHAR(100) NULL DEFAULT NULL,
-  PRIMARY KEY (`phaseTypeID`))
+CREATE TABLE IF NOT EXISTS signal_dev1.PhaseType (
+  phaseTypeID VARCHAR(36) NOT NULL,
+  phaseTypeDescription VARCHAR(100) NULL DEFAULT NULL,
+  PRIMARY KEY (phaseTypeID))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
 -- -----------------------------------------------------
--- Table `Initial`.`Phase`
+-- Table signal_dev1.Phase
 -- -----------------------------------------------------
-CREATE TABLE IF NOT EXISTS `Initial`.`Phase` (
-  `phaseID` VARCHAR(36) NOT NULL,
-  `phaseTypeID` VARCHAR(36) NULL DEFAULT NULL,
-  `intersectionID` VARCHAR(36) NULL DEFAULT NULL,
-  PRIMARY KEY (`phaseID`),
-  INDEX `phaseIntersectionFK_idx` (`intersectionID` ASC) VISIBLE,
-  INDEX `phaseTypeFK_idx` (`phaseTypeID` ASC) VISIBLE,
-  CONSTRAINT `phaseIntersectionFK`
-    FOREIGN KEY (`intersectionID`)
-    REFERENCES `Initial`.`Intersection` (`intersectionID`),
-  CONSTRAINT `phaseTypeFK`
-    FOREIGN KEY (`phaseTypeID`)
-    REFERENCES `Initial`.`PhaseType` (`phaseTypeID`))
+CREATE TABLE IF NOT EXISTS signal_dev1.Phase (
+  phaseID VARCHAR(36) NOT NULL,
+  phaseTypeID VARCHAR(36) NULL DEFAULT NULL,
+  intersectionID VARCHAR(36) NULL DEFAULT NULL,
+  phaseRowID INT NULL DEFAULT NULL,
+  PRIMARY KEY (phaseID),
+  INDEX phaseIntersectionFK_idx (intersectionID ASC) VISIBLE,
+  INDEX phaseTypeFK_idx (phaseTypeID ASC) VISIBLE,
+  CONSTRAINT phaseIntersectionFK
+    FOREIGN KEY (intersectionID)
+    REFERENCES signal_dev1.Intersection (intersectionID),
+  CONSTRAINT phaseTypeFK
+    FOREIGN KEY (phaseTypeID)
+    REFERENCES signal_dev1.PhaseType (phaseTypeID))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
