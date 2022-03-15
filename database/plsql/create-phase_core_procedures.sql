@@ -3,6 +3,7 @@ DELIMITER $$
 create procedure add_street(
 	in in_streetName VARCHAR(45), in in_streetDirection VARCHAR(45), in in_beginLatitude decimal(3,3), 
 	in in_beginLongitude  decimal(3,3), in in_endLatitude  decimal(3,3), in in_endLongitude  decimal(3,3))
+
 begin
 	declare uuid varchar(36);
 	SET uuid = (select UUID());
@@ -30,6 +31,7 @@ begin
 END$$
 DELIMITER ;
 
+
 /*
 	Procedure to add intersectionStreet
 */
@@ -47,7 +49,6 @@ begin
 END$$
 DELIMITER ;
 
-
 /* Procedure to add a phase
 */
 drop procedure if exists add_phase;
@@ -60,9 +61,7 @@ begin
 		(phaseID, phaseTypeID, intersectionID)
 	VALUES
 		(uuid, in_phaseTypeID, in_intersectionID);
-        
-	
-	
+
     select * from Phase where phaseID = uuid;
 end$$
 DELIMITER ;
@@ -81,6 +80,7 @@ begin
     select * from Node where NodeID = uuid;
 END$$
 DELIMITER ;
+
 
  /*
 	This will update or insert a light.
@@ -149,9 +149,6 @@ select Light.* from Light natural join Node where intersectionID = 'e1e6fa41-a17
 select * from Phase_vw where intersectionID = 'e1e6fa41-a171-11ec-ab9b-023e4cce1fdd';
 
 select conv('F4', 16, 2);
-
-
-
 select * from Intersection;
 
 /*
@@ -193,7 +190,7 @@ begin
 END$$
 DELIMITER ;
 
- /*
+/*
 	This will update or insert a light.
     To update a light pass in_id, to insert pass null to in_id
 */
@@ -227,13 +224,28 @@ begin
 END$$
 DELIMITER ;
 
-DROP PROCEDURE IF EXISTS patch_light;
+/*
+ This will update or insert a light.
+	 To update a light pass in_id, to insert pass null to in_id
+*/
+drop procedure if exists add_light;
 DELIMITER $$
-create procedure patch_light(IN in_id varchar(36), 
-								IN in_node_id VARCHAR(36),
-								IN in_light_phase int,
-                                IN in_light_rowID INT,
-								IN in_state varchar(100))
+create procedure add_light(IN in_node_id varchar(36), IN in_light_phase int, IN in_state varchar(100))
+begin
+ declare temp_id varchar(36);
+	 set temp_id = (select UUID());
+ insert into Light(lightID, nodeID, lightPhase, state) values (temp_id, in_node_id, in_light_phase, in_state);
+ -- can also do a Trigger before insert but this makes it so only update_light does it.
+-- 	WITH light_update AS (
+-- 		select id, ROW_NUMBER() OVER (PARTITION BY node_id) as new_row_num
+-- 		FROM light
+-- 		WHERE node_id = IN_NODE_ID
+-- 	)update light set light_id = (select light_update.new_row_num from light_update where light.id = light_update.id) WHERE node_id = IN_NODE_ID AND light.id = temp_id;
+	 select * from Light where lightID = temp_id;
+END$$
+DELIMITER ;
+DELIMITER $$
+create procedure patch_light(IN in_id int, IN in_light_phase int, IN in_state varchar(100))
 begin
 	IF in_node_id IS NOT NULL THEN
 		UPDATE Light SET nodeID = in_node_id WHERE lightID = in_id;
@@ -268,6 +280,7 @@ DELIMITER ;
 DROP PROCEDURE IF EXISTS get_node_state_id;
 DELIMITER $$
 create procedure get_node_state_id(IN in_node_id VARCHAR(36), OUT out_ret varchar(64))
+
 begin
 	declare ret varchar(64);
     declare temp varchar(4);
@@ -298,6 +311,7 @@ begin
 END$$
 DELIMITER ;
 
+
 DROP PROCEDURE IF EXISTS has_image;
 DELIMITER $$
 create procedure has_image(IN IN_NODE_ID int)
@@ -307,6 +321,7 @@ begin
     select exists (select image_key from node_image where node_id = IN_NODE_ID and image_key = temp_state_id) as reg, temp_state_id as node_state; -- registered
 end$$
 DELIMITER ;
+
 
 DROP PROCEDURE IF EXISTS update_node_image;
 DELIMITER $$
@@ -318,6 +333,7 @@ begin
 end$$
 DELIMITER ;
 
+
 DROP PROCEDURE IF EXISTS get_image_url;
 DELIMITER $$
 create procedure GET_IMAGE_URL(in in_node_id int)
@@ -326,4 +342,44 @@ begin
 	call get_node_state_id(in_node_id, temp_state_id);
 	select CONCAT(in_node_id, '_', temp_state_id, '.png') as fileName;
 end $$
+DELIMITER ;
+
+/*
+	Procedure to get a stream for a given intersection
+*/
+drop procedure if exists get_phase_stream;
+DELIMITER $$
+create procedure get_phase_stream(IN in_intersection_in varchar(36))
+begin
+with colors as (
+select *,
+case
+	WHEN state = 'RED' then 1
+    ELSE 0
+END as reds,
+case
+	WHEN state = 'GREEN' then 1
+    ELSE 0
+END as greens,
+case
+	WHEN state = 'YELLOW' then 1
+    ELSE 0
+END as yellows
+from Phase_vw where intersectionID = in_intersection_in
+order by phaseRowId
+), color_str as(
+select
+	lpad(CONV(group_concat(colors.reds order by phaseRowId desc SEPARATOR ''), 2, 16), 2, '0') red_str,
+	lpad(CONV(group_concat(colors.greens order by phaseRowId desc SEPARATOR ''), 2, 16), 2, '0') green_str,
+    lpad(CONV(group_concat(colors.yellows order by phaseRowId desc SEPARATOR ''), 2, 16), 2, '0') yellow_str
+from colors
+), cnt_str as(
+	select lpad(CONV(count(*), 10, 16), 2, '0') num_of_phases from Phase where intersectionID = in_intersection_in
+), phase_str as (
+select group_concat(concat(lpad(CONV(Phase.phaseRowId, 10, 16), 2, '0'), ':', '00:00:00:00:00:00:00:00:00:00:00:00') SEPARATOR ':') phase_str from Phase where intersectionID = in_intersection_in order by phaseRowId
+)
+select CONCAT('CD:', cnt_str.num_of_phases, ':', phase_str.phase_str, ':',
+			  color_str.red_str, ':', color_str.yellow_str, ':', color_str.green_str, ':',
+              '00:00:00:00:00:00:00:00:00') `data.data` from color_str, cnt_str, phase_str;
+end$$
 DELIMITER ;
