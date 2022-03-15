@@ -1,0 +1,7 @@
+path: ./
+train: yolo_data/train
+val: yolo_data/val
+test: yolo_data/test
+
+nc: 6
+names: [ 'go', 'goLeft', 'stop', 'stopLeft', 'warning', 'warningLeft' ]
