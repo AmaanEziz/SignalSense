@@ -48,22 +48,38 @@ sock.on('message',function(msg,info){
 });
 
 
-
-// setInterval(()=>{
-//   const daquery = 'call getPhaseStream()';
-//   pool.query(daquery, null, (error, results) => {
-//     if (error) {
-//       console.log(error);
-//     }
-//     else {
-//       sock.send(JSON.stringify(results), 2222, '192.168.254.255',function(error){
-//         if(error){
-//           console.log(error);
-//           client.close();
-//         }else{
-//           console.log('Data is sent !');
-//         }
-//       });
-//     }
-//   });
-// }, 90);
+const pool2 = require('./dbconfig');
+// Send a signal every 90 milliseconds
+setInterval(()=>{
+  // if this is ran on a Signal sense box, there should only exist
+  // one intersection ID 
+  const intersection_id = 'select intersectionID from Intersection';
+  pool.query(intersection_id, null, (error, result) =>{
+    // check if query was sucessful 
+    if(error){
+      console.log(error);
+    }
+    else{
+      // Query the NTCIP stream for a given intersection
+      const ntcip_query = 'call get_phase_stream(?)';
+      console.log(result);
+      pool2.query(ntcip_query, result[0].intersectionID, (error, results) =>{
+        //check if query was successful
+        if(error) {
+          console.log(error);
+        }
+        else {
+          // Send NTCIP stream to our hypothetical "RSU"
+          sock.send(JSON.stringify(results), 2453, '10.0.15.255', function(error){            
+            if(error){
+              console.log(error);
+            }
+            else {
+              console.log('NTCIP stream has been sent.');
+            }
+          });
+        }
+      });
+    }
+  });
+}, 100);
