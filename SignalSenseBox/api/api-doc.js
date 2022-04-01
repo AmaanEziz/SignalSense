@@ -202,7 +202,7 @@ module.exports =
               },
               "examples": {
                 "0": {
-                  "value": "    {\n        \"location\": \"NORTHBOUND HW 88 and Macville\",\n        \"ipaddress\": \"1932.168.1.1\",\n        \"isalive\": 1\n    }"
+                  "value": "    {\n        \"location\": \"NORTHBOUND HW 88 and Macville\",\n        \"intersectionID\": \"848936b4-af2c-11ec-993a-0242ac120002\",\n        \"ipaddress\": \"1932.168.1.1\",\n        \"isalive\": 1\n    }"
                 },
                 "1": {
                   "value": "    {\n        \"location\": \"EASTBOUND HW 88 and Macville\",\n        \"ipaddress\": \"1932.168.1.1\",\n        \"isalive\": 1\n    }"
@@ -319,10 +319,13 @@ module.exports =
       "node": {
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer"
+          "nodeID": {
+            "type": "string"
           },
           "location": {
+            "type": "string"
+          },
+          "intersectionID": {
             "type": "string"
           },
           "ipaddress": {

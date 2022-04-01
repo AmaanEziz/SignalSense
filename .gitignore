@@ -7,5 +7,5 @@ backend/package-lock.json
 
 on-device/client/node_data.json
 SignalSenseBox/package-lock.json
-SignalSenseBox/package.json
 backend/.env.stg
+backend/.env.prod_old

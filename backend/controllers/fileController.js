@@ -40,8 +40,12 @@ const download = (req, res) => {
   const directoryPath = userHome + "/SignalSenseFiles/resources/static/assets/uploads/";
   res.sendFile(directoryPath + fileName, fileName, (err) => {
     if (err) {
-      res.status(500).send({
-        message: "Could not download the file. " + err,
+      res.sendFile(directoryPath + 'something_went_wrong.pineapple.png', 'something_went_wrong.pineapple.png', (err) => {
+        if (err) {
+          res.status(500).send({
+            message: "Could not download the file. " + err,
+          });
+        }
       });
     }
   });
