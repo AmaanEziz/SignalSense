@@ -323,7 +323,7 @@ begin
 end$$
 DELIMITER ;
 
-drop procedure get_image;
+drop procedure if exists  get_image;
 DELIMITER $$
 create procedure get_image(in p_nodeID varchar(36))
 begin
@@ -331,9 +331,9 @@ begin
     declare v_fileName varchar(100);
     SET v_img = get_image_state(p_nodeID);
     SET v_fileName = (select img from ImageFileName where img = v_img);
-    if v_fileName is null then 
+    if v_fileName is null then
 		select 'NOT_REGISTERD', concat(v_img, '.png') as img;
-    ELSE 
+    ELSE
 		select 'REGISTERD', concat(v_img, '.png') as img;
     end if;
 end$$
@@ -358,7 +358,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 -- Create the intersection
 call add_intersection(.123, .221);
 set v_intersection_id = (select intersectionID from Intersection);
--- add the Phases to hte Phase table. 
+-- add the Phases to hte Phase table.
 phaseLoop: LOOP
 	if i = p_num_of_phases then
 		LEAVE phaseLoop;
@@ -366,7 +366,7 @@ phaseLoop: LOOP
     SET i = i + 1;
     call add_phase('1', v_intersection_id);
 END LOOP;
--- Update the rowNum for the Phase table. 
+-- Update the rowNum for the Phase table.
 SET SQL_SAFE_UPDATES = 0;
 with update_phase as(
 select *, row_number() over (partition by intersectionID) rn from Phase)
@@ -380,7 +380,7 @@ IF p_make_dummy_data THEN
     call add_light(v_node_id, 2, '2');
     call add_light(v_node_id, 3, '1');
     call add_light(v_node_id, 5, '3');
-    
+
     SET SQL_SAFE_UPDATES = 0;
     with update_light as(
 		select *, row_number() over (partition by nodeID) rn from Light)

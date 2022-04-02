@@ -1,6 +1,6 @@
 services: 
   mysqldb:
-    image: michaelingrum/signal-db:latest
+    image: michaelingrum/signal-db:7.0
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
