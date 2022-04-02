@@ -5,7 +5,7 @@ function nodeController() {
     if (req.query.nodeId == null) {
       return res.status(401).send('Missing query pram nodeId');
     }
-    const query = "select id, light_id, state, light_phase from light where node_id = ? order by 2";
+    const query = "select lightID, lightRowID, state, lightPhase from Light where nodeID = ? order by 2";
     pool.query(query, [req.query.nodeId], (error, results) => {
       if (error) {
         console.log(error);
@@ -20,14 +20,14 @@ function nodeController() {
     });
   }
   function post(req, res) {
-    const { light_id, node_id, light_phase, state } = req.body;
+    const {node_id, light_phase, light_rowID, state } = req.body;
     console.log(req.body);
     if (false) {
       //TODO add some sorta error handeling...
       //res.status(401).send('Missing query pram location');
     } else {
-      const query = "CALL update_light(?,?,?,?)";
-      pool.query(query, [light_id, node_id, light_phase, state], (error, results) => {
+      const query = "CALL add_light(?,?,?,?)";
+      pool.query(query, [node_id, light_phase, light_rowID, state], (error, results) => {
         if (error) {
           console.log(error);
           return res.status(501).send('DB is down');
