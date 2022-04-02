@@ -36,7 +36,7 @@ function nodeController(Node) {
     }
   };
   function post(req, res) {
-    const { location, intersection,  ipaddress, isalive } = req.body;
+    const { location, intersectionID, ipaddress, isalive } = req.body;
     if (location == null) {
       return res.status(400).send('Missing location from json');
     } else if (ipaddress == null) {
@@ -44,11 +44,8 @@ function nodeController(Node) {
     } else if (isalive == null) {
       return res.status(400).send('Missing isalive from json');
     } else {
-      if(intersection == null){
-        intersection = '81721879-a422-11ec-ab9b-023e4cce1fdd';
-      }
       const query = "CALL add_node(?, ?, ?, ?)";
-      pool.query(query, [location, intersection, ipaddress, isalive], (error, results) => {
+      pool.query(query, [location, intersectionID, ipaddress, isalive], (error, results) => {
         if (error) {
           console.log(error);
           return res.json({ status: "node_id not found" });
@@ -80,8 +77,8 @@ function nodeController(Node) {
     if (req.query.nodeId == null) {
       return res.status(401).send('Missing query pram nodeId ');
     }
-    const query = "CALL patch_node(?,?,?,?)";
-    pool.query(query, [req.query.nodeId, location, ipaddress, isalive], (error, results) => {
+    const query = "CALL patch_node(?,?,?,?,?)";
+    pool.query(query, [req.query.nodeId, location,null, ipaddress, isalive], (error, results) => {
       if (error) {
         console.log(error);
         return res.status(500).send('DB is down');
