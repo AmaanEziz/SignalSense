@@ -61,10 +61,11 @@ describe('Test GEt /api/node', () => {
                 res.should.have.status(200);
                 res.body.should.be.a('object');
                 // res.body.length.should.be.eql(0);
-                res.body.should.have.property('id');
-                res.body.should.have.property('location');
-                res.body.should.have.property('ipaddress');
-                res.body.should.have.property('isalive');
+                res.body.should.have.property('nodeID');
+                res.body.should.have.property('nodeDescription');
+                res.body.should.have.property('intersectionID');
+                res.body.should.have.property('ipAddress');
+                res.body.should.have.property('isAlive');
                 // res.body.errors.pages.should.have.property('kind').eql('required');
             done();
           });
@@ -80,10 +81,10 @@ describe('Test GEt /api/node/light', () => {
                 res.should.have.status(200);
                 res.body.should.be.a('object');
                 // res.body.length.should.be.eql(0);
-                res.body.should.have.property('id');
-                res.body.should.have.property('node_id');
-                res.body.should.have.property('light_id');
-                res.body.should.have.property('light_phase');
+                res.body.should.have.property('lightID');
+                res.body.should.have.property('nodeID');
+                res.body.should.have.property('lightPhase');
+                res.body.should.have.property('lightRowID');
                 res.body.should.have.property('state');
                 // res.body.errors.pages.should.have.property('kind').eql('required');
             done();
@@ -94,10 +95,8 @@ describe('Test GEt /api/node/light', () => {
 describe('Test POST /api/node/light', () => {
     it('it should not POST a light without state field', (done) => {
         let light = {
-            id: 1,
-            node_id: 3,
-            light_id: 4,
-            light_phase: 6
+            lightID: '1',
+            lightPhase: 6
         }
     //   chai.request(server)
       chai.request('http://localhost:3000')
@@ -114,10 +113,8 @@ describe('Test POST /api/node/light', () => {
     });
     it('it should POST a light', (done) => {
         let light = {
-            id: 1,
-            node_id: 3,
-            light_id: 4,
-            light_phase: 6,
+            lightID: '1',
+            lightPhase: 6,
             state: 'RED'
         }
     //   chai.request(server)
@@ -128,10 +125,8 @@ describe('Test POST /api/node/light', () => {
                 res.should.have.status(200);
                 res.body.should.be.a('object');
                 res.body.should.have.property('message').eql('Book successfully added!');
-                res.body.should.have.property('id');
-                res.body.should.have.property('node_id');
-                res.body.should.have.property('light_id');
-                res.body.should.have.property('light_phase');
+                res.body.should.have.property('lightID');
+                res.body.should.have.property('lightPhase');
                 res.body.should.have.property('state');
             done();
           });
