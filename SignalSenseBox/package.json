@@ -4,7 +4,7 @@
   "description": "Centeral server for PhaseSense",
   "main": "index.js",
   "scripts": {
-    "test": "mocha",
+    "test": "mocha --timeout 10000",
     "start": "nodemon index.js -L"
   },
   "repository": {
