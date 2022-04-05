@@ -3,12 +3,6 @@ import string
 import requests
 import json
 
-# Return status: 
-# - 1 is successful request
-# - 0 is unsuccessful request
-status = 0
-
-
 # define Python user-defined exceptions
 class ResponseCodeError(Exception):
     pass
@@ -22,10 +16,11 @@ class ResponseCodeError(Exception):
 #
 # Return: 
 #   A staus code and dictionary object.
-def postNewNode(loc: string = "Location", ip: string = "IP Address", isAlive: int = 0):
+def postNewNode(loc: string = "Location", intersection_id: string='0000', ip: string = "IP Address", isAlive: int = 0):
+    status = 0
     newNodeData = None
-    nodeData = {"location" : loc, "ipaddress" : ip, "isalive" : isAlive}
-    serverName = 'http://ec2-3-141-8-69.us-east-2.compute.amazonaws.com:3000/api/node/admin' 
+    nodeData = {"location" : loc, "intersectionID": intersection_id,  "ipaddress" : ip, "isalive" : isAlive}
+    serverName = 'http://localhost:3000/api/node/admin' 
 
     try:
         # Send the request
@@ -61,7 +56,7 @@ def patchNode(id: int = 0, loc: string = "Location", ip: string = "IP Address", 
     try:
         # Send the request
         r = requests.patch(serverName, json=nodeData, params=args)
-        newNodeData = json.loads(r.text)
+        #newNodeData = json.loads(r.text)
         r.raise_for_status()
         status = 1
     except requests.HTTPError:
@@ -71,7 +66,7 @@ def patchNode(id: int = 0, loc: string = "Location", ip: string = "IP Address", 
     except requests.ConnectionError:
         status = 0
     finally:
-        return status, newNodeData
+        return status
 
 # Purpose: 
 #   Delete a node from the database.
@@ -107,13 +102,15 @@ def deleteNode(id: int = 0):
 #
 # Return: 
 #   A staus code.
-def postNewLight(id: int = 0, state: string = "RED", phase: int = 0):
-    nodeData = {"node_id" : id, "state" : state, "light_phase" : phase}
-    serverName = 'http://ec2-3-141-8-69.us-east-2.compute.amazonaws.com:3000/api/node/light' 
+def postNewLight(id: int = 0, state: string = "0", phase: int = 0):
+    nodeData = {"node_id" : id, "light_phase" : phase, "state" : state}
+    light_data = None
+    serverName = 'http://localhost:3000/api/node/light' 
 
     try:
         # Send the request
         r = requests.post(serverName, json=nodeData)
+        light_data = json.loads(r.text)
         r.raise_for_status()
         status = 1
     except requests.HTTPError:
@@ -123,7 +120,7 @@ def postNewLight(id: int = 0, state: string = "RED", phase: int = 0):
     except requests.ConnectionError:
         status = 0
     finally:
-        return status
+        return status, light_data
 
 # Purpose: 
 #   Patch a light on the database.
@@ -134,7 +131,7 @@ def postNewLight(id: int = 0, state: string = "RED", phase: int = 0):
 #
 # Return: 
 #   A staus code.
-def patchLight(id: int = 0, light_id: int = 0, state: string = 'RED', phase: int = 0):
+def patchLight(id: int = 0, light_id: int = 0, state: string = '0'):
     
     status, lights = getLights(id)
 
@@ -144,8 +141,8 @@ def patchLight(id: int = 0, light_id: int = 0, state: string = 'RED', phase: int
 
     # Modify a light with new state
     for light in lights:
-        if light["id"] == id:
-            if light["light_id"] == light_id:
+        if light["nodeID"] == id:
+            if light["lightID"] == light_id:
                 light["state"] = state
                 status = 1
             else:
@@ -162,7 +159,7 @@ def patchLight(id: int = 0, light_id: int = 0, state: string = 'RED', phase: int
 
     try:
         # Send the request
-        r = requests.patch('http://ec2-3-141-8-69.us-east-2.compute.amazonaws.com:3000/api/node/setLights', json=newLights, params=args)
+        r = requests.patch('http://localhost:3000/api/node/setLights', json=newLights, params=args)
         r.raise_for_status()
         status = 1
     except requests.HTTPError:
@@ -174,7 +171,6 @@ def patchLight(id: int = 0, light_id: int = 0, state: string = 'RED', phase: int
     finally:
         return status
 
-
 # Purpose: 
 #   Patch a light on the database.
 #
@@ -184,12 +180,13 @@ def patchLight(id: int = 0, light_id: int = 0, state: string = 'RED', phase: int
 #
 # Return: 
 #   A staus code.
-def getLights(id: int = 0):
+def getLights(id):
     args = {"nodeId" : id}
     lightData = None
+    status = 0
     
     try:
-        r = requests.delete('http://ec2-3-141-8-69.us-east-2.compute.amazonaws.com:3000/api/node/light', params=args)
+        r = requests.get('http://localhost:3000/api/node/light', params=args)
         r.raise_for_status()
         lightData = json.loads(r.text)
         status = 1
