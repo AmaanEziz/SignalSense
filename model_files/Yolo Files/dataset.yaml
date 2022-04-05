@@ -3,5 +3,5 @@ train: yolo_data/train
 val: yolo_data/val
 test: yolo_data/test
 
-nc: 7
-names: [ 'go', 'goLeft', 'goForward', 'stop', 'stopLeft', 'warning', 'warningLeft' ]
+nc: 14
+names: [ 'Green', 'GreenLeft', 'GreenStraight', 'GreenRight', 'GreenStraightRight', 'GreenStraightLeft', 'Red', 'RedLeft', 'RedStraight', 'RedRight', 'RedStraightLeft', 'Yellow', 'YellowLeft', 'off']
