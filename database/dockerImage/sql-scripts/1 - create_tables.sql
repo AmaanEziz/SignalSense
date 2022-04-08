@@ -118,12 +118,12 @@ CREATE TABLE IF NOT EXISTS Phase (
 
 
   -- -----------------------------------------------------
-  -- Table Phase
+  -- Table ImageFileName
   -- -----------------------------------------------------
-create table `ImageFileName` (
-	`imageFileNameID` varchar(36) primary key default (UUID()),
-    `img` varchar(100) not null
-);
+CREATE TABLE IF NOT EXISTS ImageFileName (
+	imageFileNameID VARCHAR(36) NOT NULL,
+  img VARCHAR(100) NOT NULL,
+  PRIMARY KEY (imageFileNameID))
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
