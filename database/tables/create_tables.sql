@@ -153,6 +153,18 @@ DEFAULT CHARACTER SET = utf8mb4
 COLLATE = utf8mb4_0900_ai_ci;
 
 
+-- -----------------------------------------------------
+-- Table signal_dev1.ImageFileName
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS signal_dev1.ImageFileName (
+	imageFileNameID VARCHAR(36) NOT NULL,
+  img VARCHAR(100) NOT NULL,
+  PRIMARY KEY (imageFileNameID))
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8mb4
+COLLATE = utf8mb4_0900_ai_ci;
+
+
 SET SQL_MODE=@OLD_SQL_MODE;
 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
