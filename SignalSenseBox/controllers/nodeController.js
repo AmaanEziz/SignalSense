@@ -1,7 +1,6 @@
 
 const pool = require('../dbconfig');
 
-
 function nodeController(Node) {
   function getAll(req, res) {
     const query = "SELECT * FROM Node";
@@ -78,7 +77,7 @@ function nodeController(Node) {
       return res.status(401).send('Missing query pram nodeId ');
     }
     const query = "CALL patch_node(?,?,?,?,?)";
-    pool.query(query, [req.query.nodeId, location,null, ipaddress, isalive], (error, results) => {
+    pool.query(query, [req.query.nodeId, location, null, ipaddress, isalive], (error, results) => {
       if (error) {
         console.log(error);
         return res.status(500).send('DB is down');
