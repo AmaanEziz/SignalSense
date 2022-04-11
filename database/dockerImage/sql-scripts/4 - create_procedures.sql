@@ -389,3 +389,70 @@ IF p_make_dummy_data THEN
 end if;
 end$$
 delimiter ;
+
+drop procedure if exists get_all_data;
+DELIMITER $$
+create procedure get_all_data()
+begin
+	declare temp varchar(4000);
+	set temp = '{}';
+	set temp = JSON_INSERT(temp, '$.intersections', (select json_arrayagg(json_object('intersectionID', intersectionID,'latitude', latitude,'longitude', longitude)) from Intersection));
+	set temp = JSON_INSERT(temp, '$.nodes', (select json_arrayagg(json_object('nodeID', nodeID, 'nodeDescription', nodeDescription, 'intersectionID', intersectionID, 'ipAddress', ipAddress, 'isAlive', isAlive)) from Node));
+	set temp = JSON_INSERT(temp, '$.lights', (select json_arrayagg(json_object('lightID', lightID,'lightPhase', lightPhase,'lightRowID', lightRowID,'nodeID', nodeID,'state', state)) from Light));
+	select temp;
+end $$
+DELIMITER ;
+
+drop procedure if exists updateAll;
+DELIMITER $$
+create procedure updateAll(in p_data varchar(4000))
+begin
+if JSON_VALID(p_data) THEN
+	-- Update Intersections --
+	insert into Intersection
+		select * FROM
+			JSON_TABLE(
+				p_data,
+				"$.intersections[*]" COLUMNS(
+					intersectionID VARCHAR(36) path "$.intersectionID",
+					latitude decimal(3,3) path "$.latitude",
+					longitude decimal(3,3) path "$.longitude"
+					)
+			) as it
+		ON DUPLICATE KEY UPDATE latitude = it.latitude, longitude = it.longitude;
+
+	-- Update Node --
+	insert into Node
+		select * FROM
+			JSON_TABLE(
+				p_data,
+				"$.nodes[*]" COLUMNS(
+					nodeID varchar(36) path "$.nodeID",
+					nodeDescription varchar(100)  path "$.nodeDescription",
+					intersectionID varchar(36) path "$.intersectionID",
+					ipAddress varchar(20) path "$.ipAddress",
+					isAlive binary(1) path "$.isAlive"
+					)
+			) as nt
+		ON DUPLICATE KEY UPDATE nodeDescription = nt.nodeDescription, intersectionID = nt.intersectionID,
+								ipAddress = nt.ipAddress, isAlive = nt.isAlive;
+	-- Update Light
+	insert into Light
+		select * FROM
+			JSON_TABLE(
+				p_data,
+				"$.lights[*]" COLUMNS(
+					lightID varchar(36) path "$.lightID",
+					nodeID varchar(36) path "$.nodeID",
+					lightPhase int path "$.lightPhase",
+					lightRowID int path "$.lightRowID",
+					state varchar(100) path "$.state"
+					)
+			) as lt
+		ON DUPLICATE KEY UPDATE lightID = lt.lightID, nodeID = lt.nodeID, lightPhase = lt.lightPhase,
+								lightRowID = lt.lightRowID, lightRowID = lt.lightRowID, state = lt.state;
+else
+	select 'BAD JSON' x;
+END IF;
+end $$
+DELIMITER ;
