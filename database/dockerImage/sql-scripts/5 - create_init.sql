@@ -1,4 +1,5 @@
-drop procedure if exists init;
+
+/*drop procedure if exists init;
 delimiter $$
 create procedure init(IN p_num_of_phases int, IN p_make_dummy_data boolean)
 begin
@@ -49,5 +50,56 @@ IF p_make_dummy_data THEN
 end if;
 end$$
 delimiter ;
+*/s
+
+DROP PROCEDURE IF EXISTS init;
+DELIMITER $$
+CREATE PROCEDURE init(IN p_num_of_phases INT, IN p_make_dummy_data BOOLEAN)
+BEGIN
+	DECLARE i INT DEFAULT 0;
+    DECLARE v_intersection_id VARCHAR(36);
+    DECLARE v_node_id VARCHAR(36);
+    
+    DECLARE table_size INT;
+    SET table_size = (SELECT COUNT(*) FROM Intersection);
+    IF table_size = 0 THEN
+    
+		SET FOREIGN_KEY_CHECKS = 1;
+		
+		CALL add_intersection(.123, .221);
+		SET v_intersection_id = (SELECT intersectionID FROM Intersection);
+		
+		phaseLoop: LOOP
+			IF i = p_num_of_phases THEN
+				LEAVE phaseLoop;
+			END IF;
+			SET i = i + 1;
+			CALL add_phase('1', v_intersection_id);
+		END LOOP;
+		
+		SET SQL_SAFE_UPDATES = 0;
+		WITH update_phase AS (
+			SELECT *, row_number() OVER (PARTITION BY intersectionID) rn FROM Phase)
+			UPDATE Phase SET phaseRowID = (SELECT rn FROM update_phase WHERE update_phase.phaseID = Phase.phaseID);
+		SET SQL_SAFE_UPDATES = 1;
+		
+		IF p_make_dummy_data THEN
+			CALL add_node('NORTHBOUND DUMMY ST', v_intersection_id, '192.168.1.1', true);
+			SET v_node_id = (SELECT nodeID FROM Node);
+			CALL add_light(v_node_id, 1, '1');
+			CALL add_light(v_node_id, 2, '2');
+			CALL add_light(v_node_id, 3, '3');
+			CALL add_light(v_node_id, 4, '4');
+			
+			SET SQL_SAFE_UPDATES = 0;
+			WITH update_light AS (SELECT *, row_number() OVER (PARTITION BY nodeID) rn FROM Light)
+			UPDATE Light SET lightRowID = (SELECT rn FROM update_light WHERE update_light.lightID = Light.lightID);
+			SET SQL_SAFE_UPDATES = 1;
+		END IF;
+
+        ELSE SELECT 'Not Initialized';
+	END IF;
+END $$
+DELIMITER ;
 
 call init(8, true);

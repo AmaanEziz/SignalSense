@@ -49,6 +49,25 @@ begin
 END$$
 DELIMITER ;
 
+/*
+	Procedure to add intersection with intersectionstreet
+*/
+DROP PROCEDURE IF EXISTS add_intersection_w_IS;
+DELIMITER $$
+CREATE PROCEDURE add_intersection_w_IS(IN lat DECIMAL(3, 3), IN lon DECIMAL(3, 3), IN sID VARCHAR(36), sPM DECIMAL(3, 2))
+BEGIN
+	DECLARE uuid VARCHAR(36);
+    DECLARE is_uuid VARCHAR(36);
+    SET uuid = (SELECT uuid());
+	INSERT INTO Intersection VALUES (uuid, lat, lon);
+    SELECT * FROM Intersection WHERE intersectionID = uuid;
+
+	SET is_uuid = (SELECT uuid());
+	INSERT INTO IntersectionStreet VALUES(is_uuid, uuid, sID, sPM);
+	SELECT * FROM IntersectionStreet WHERE intersectionStreetID = is_uuid;
+END $$
+DELIMITER ;
+
 /* Procedure to add a phase
 */
 drop procedure if exists add_phase;
@@ -381,5 +400,35 @@ select group_concat(concat(lpad(CONV(Phase.phaseRowId, 10, 16), 2, '0'), ':', '0
 select CONCAT('CD:', cnt_str.num_of_phases, ':', phase_str.phase_str, ':',
 			  color_str.red_str, ':', color_str.yellow_str, ':', color_str.green_str, ':',
               '00:00:00:00:00:00:00:00:00') `data.data` from color_str, cnt_str, phase_str;
+end$$
+DELIMITER ;
+
+drop procedure if exists save_image;
+DELIMITER $$
+create procedure save_image(in p_nodeID varchar(36))
+begin
+	declare img varchar(100);
+	SET img = (select concat(p_nodeID,'_', 
+				group_concat(state, lightPhase order by lightRowID desc SEPARATOR '')) 
+				from Light where nodeID = p_nodeID);
+    insert into ImageFileName values (DEFAULT, img);
+end$$
+DELIMITER ;
+
+drop procedure if exists  get_image;
+DELIMITER $$
+create procedure get_image(in p_nodeID varchar(36))
+begin
+	declare v_img varchar(100);
+    declare v_fileName varchar(100);
+    SET v_img = (select concat(p_nodeID,'_', 
+				group_concat(state, lightPhase order by lightRowID desc SEPARATOR '')) 
+				from Light where nodeID = p_nodeID);
+    SET v_fileName = (select img from ImageFileName where img = v_img);
+    if v_fileName is null then
+		select 'NOT_REGISTERED', concat(v_img, '.png') as img;
+    ELSE
+		select 'REGISTERED', concat(v_img, '.png') as img;
+    end if;
 end$$
 DELIMITER ;

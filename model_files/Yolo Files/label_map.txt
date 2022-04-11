@@ -1,7 +1,0 @@
-go             0
-goLeft         1
-goForward      2
-stop           3
-stopLeft       4
-warning        5
-warningLeft    6

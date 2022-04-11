@@ -45,10 +45,12 @@ def setup():
 
     # Create label mapping file for reference
     print("Generating label mapping file")
-    with open('./label_map.txt', 'w') as f:
+    with open('./label_map.csv', 'w') as f:
         f.truncate()
-        for x in ['go', 'goLeft', 'goForward', 'stop', 'stopLeft', 'warning', 'warningLeft']:
-            f.write(x.ljust(15) + str(encode_annotation(x)) + '\n')
+        with open('./dataset.yaml', 'r') as yaml_f:  # Read the dataset.yaml file for mappings
+            annotation_list = yaml.safe_load(yaml_f)['names']
+            for x in annotation_list:
+                f.write(str(encode_annotation(x)) + ',' + x + '\n')
     print("Label mapping file generated")
     print("Setup complete\n")
 
@@ -59,6 +61,17 @@ def encode_annotation(annotation):
     :param annotation: String of annotation tag
     :return encoded_annotation: Encoded annotation in integer form
     """
+    rename_dict = {'go': 'Green',
+                   'goLeft': 'GreenLeft',
+                   'goForward': 'GreenStraight',
+                   'stop': 'Red',
+                   'stopLeft': 'RedLeft',
+                   'warning': 'Yellow',
+                   'warningLeft': 'YellowLeft'
+                   }
+    if annotation in rename_dict:
+        annotation = rename_dict[annotation]
+
     with open('./dataset.yaml', 'r') as yaml_f:  # Read the dataset.yaml file for mappings
         annotation_list = yaml.safe_load(yaml_f)['names']
         if annotation in annotation_list:
