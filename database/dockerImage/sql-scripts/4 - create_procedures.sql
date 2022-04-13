@@ -18,7 +18,8 @@ end$$
 DELIMITER ;
 
 
-/* Procedure to add intersection
+/* 
+	Procedure to add intersection
 */
 drop procedure if exists add_intersection;
 DELIMITER $$
@@ -49,7 +50,8 @@ begin
 END$$
 DELIMITER ;
 
-/* Procedure to add a phase
+/* 
+	Procedure to add a phase
 */
 drop procedure if exists add_phase;
 DELIMITER $$
@@ -301,24 +303,27 @@ select CONCAT('CD:', cnt_str.num_of_phases, ':', phase_str.phase_str, ':',
 end$$
 DELIMITER ;
 
-
-SET GLOBAL log_bin_trust_function_creators = 1;
+/*
+--SET GLOBAL log_bin_trust_function_creators = 1;
 drop function if exists get_image_state;
 DELIMITER $$
 create function get_image_state(p_nodeID varchar(36))
 returns varchar(100)
 NOT DETERMINISTIC
 begin
-	return (select concat(p_nodeID,'_', group_concat(state, lightPhase order by lightRowID desc SEPARATOR '')) from Light where nodeID = p_nodeID);
+	return (select concat(p_nodeID,'_', group_concat(state, lightPhase order by lightRowID desc SEPARATOR '')) 
+	from Light where nodeID = p_nodeID);
 end$$
 DELIMITER ;
+*/
 
 
 DELIMITER $$
 create procedure save_image(in p_nodeID varchar(36))
 begin
 	declare img varchar(100);
-	SET img = get_image_state(p_nodeID);
+	SET img = (select concat(p_nodeID,'_', group_concat(state, lightPhase order by lightRowID desc SEPARATOR '')) 
+				ßfrom Light where nodeID = p_nodeID);
     insert into ImageFileName values (DEFAULT, img);
 end$$
 DELIMITER ;
@@ -329,15 +334,19 @@ create procedure get_image(in p_nodeID varchar(36))
 begin
 	declare v_img varchar(100);
     declare v_fileName varchar(100);
-    SET v_img = get_image_state(p_nodeID);
+    SET v_img = (select concat(p_nodeID,'_', group_concat(state, lightPhase order by lightRowID desc SEPARATOR '')) 
+				from Light where nodeID = p_nodeID);
     SET v_fileName = (select img from ImageFileName where img = v_img);
     if v_fileName is null then
-		select 'NOT_REGISTERD', concat(v_img, '.png') as img;
+		select 'NOT_REGISTERED', concat(v_img, '.png') as img;
     ELSE
-		select 'REGISTERD', concat(v_img, '.png') as img;
+		select 'REGISTERED', concat(v_img, '.png') as img;
     end if;
 end$$
 DELIMITER ;
+
+
+/*
 drop procedure if exists init;
 delimiter $$
 create procedure init(IN p_num_of_phases int, IN p_make_dummy_data boolean)
@@ -389,3 +398,120 @@ IF p_make_dummy_data THEN
 end if;
 end$$
 delimiter ;
+*/
+
+DROP PROCEDURE IF EXISTS init;
+DELIMITER $$
+CREATE PROCEDURE init(IN p_num_of_phases INT, IN p_make_dummy_data BOOLEAN)
+BEGIN
+	DECLARE i INT DEFAULT 0;
+    DECLARE v_intersection_id VARCHAR(36);
+    DECLARE v_node_id VARCHAR(36);
+    
+    DECLARE table_size INT;
+    SET table_size = (SELECT COUNT(*) FROM Intersection);
+    IF table_size = 0 THEN
+    
+		SET FOREIGN_KEY_CHECKS = 1;
+		
+		CALL add_intersection(.123, .221);
+		SET v_intersection_id = (SELECT intersectionID FROM Intersection);
+		
+		phaseLoop: LOOP
+			IF i = p_num_of_phases THEN
+				LEAVE phaseLoop;
+			END IF;
+			SET i = i + 1;
+			CALL add_phase('1', v_intersection_id);
+		END LOOP;
+		
+		SET SQL_SAFE_UPDATES = 0;
+		WITH update_phase AS (
+			SELECT *, row_number() OVER (PARTITION BY intersectionID) rn FROM Phase)
+			UPDATE Phase SET phaseRowID = (SELECT rn FROM update_phase WHERE update_phase.phaseID = Phase.phaseID);
+		SET SQL_SAFE_UPDATES = 1;
+		
+		IF p_make_dummy_data THEN
+			CALL add_node('NORTHBOUND DUMMY ST', v_intersection_id, '192.168.1.1', true);
+			SET v_node_id = (SELECT nodeID FROM Node);
+			CALL add_light(v_node_id, 1, '1');
+			CALL add_light(v_node_id, 2, '2');
+			CALL add_light(v_node_id, 3, '3');
+			CALL add_light(v_node_id, 4, '4');
+			
+			SET SQL_SAFE_UPDATES = 0;
+			WITH update_light AS (SELECT *, row_number() OVER (PARTITION BY nodeID) rn FROM Light)
+			UPDATE Light SET lightRowID = (SELECT rn FROM update_light WHERE update_light.lightID = Light.lightID);
+			SET SQL_SAFE_UPDATES = 1;
+		END IF;
+
+		ELSE SELECT 'Not Initialized';
+	END IF;
+END $$
+DELIMITER ;
+
+drop procedure if exists get_all_data;
+DELIMITER $$
+create procedure get_all_data()
+begin
+	declare temp varchar(4000);
+	set temp = '{}';
+	set temp = JSON_INSERT(temp, '$.intersections', (select json_arrayagg(json_object('intersectionID', intersectionID,'latitude', latitude,'longitude', longitude)) from Intersection));
+	set temp = JSON_INSERT(temp, '$.nodes', (select json_arrayagg(json_object('nodeID', nodeID, 'nodeDescription', nodeDescription, 'intersectionID', intersectionID, 'ipAddress', ipAddress, 'isAlive', isAlive)) from Node));
+	set temp = JSON_INSERT(temp, '$.lights', (select json_arrayagg(json_object('lightID', lightID,'lightPhase', lightPhase,'lightRowID', lightRowID,'nodeID', nodeID,'state', state)) from Light));
+	select temp;
+end $$
+DELIMITER ;
+
+drop procedure if exists updateAll;
+DELIMITER $$
+create procedure updateAll(in p_data varchar(4000))
+begin
+if JSON_VALID(p_data) THEN
+	-- Update Intersections --
+	insert into Intersection
+		select * FROM
+			JSON_TABLE(
+				p_data,
+				"$.intersections[*]" COLUMNS(
+					intersectionID VARCHAR(36) path "$.intersectionID",
+					latitude decimal(3,3) path "$.latitude",
+					longitude decimal(3,3) path "$.longitude"
+					)
+			) as it
+		ON DUPLICATE KEY UPDATE latitude = it.latitude, longitude = it.longitude;
+
+	-- Update Node --
+	insert into Node
+		select * FROM
+			JSON_TABLE(
+				p_data,
+				"$.nodes[*]" COLUMNS(
+					nodeID varchar(36) path "$.nodeID",
+					nodeDescription varchar(100)  path "$.nodeDescription",
+					intersectionID varchar(36) path "$.intersectionID",
+					ipAddress varchar(20) path "$.ipAddress",
+					isAlive binary(1) path "$.isAlive"
+					)
+			) as nt
+		ON DUPLICATE KEY UPDATE nodeDescription = nt.nodeDescription, intersectionID = nt.intersectionID,
+								ipAddress = nt.ipAddress, isAlive = nt.isAlive;
+	-- Update Light
+	insert into Light
+		select * FROM
+			JSON_TABLE(
+				p_data,
+				"$.lights[*]" COLUMNS(
+					lightID varchar(36) path "$.lightID",
+					nodeID varchar(36) path "$.nodeID",
+					lightPhase int path "$.lightPhase",
+					lightRowID int path "$.lightRowID",
+					state varchar(100) path "$.state"
+					)
+			) as lt
+		ON DUPLICATE KEY UPDATE lightID = lt.lightID, nodeID = lt.nodeID, lightPhase = lt.lightPhase,
+								lightRowID = lt.lightRowID, lightRowID = lt.lightRowID, state = lt.state;
+else
+	select 'BAD JSON' x;
+END IF;
+end $$

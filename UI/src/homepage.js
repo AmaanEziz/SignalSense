@@ -4,7 +4,7 @@ $.getJSON('https://signalsense.link/api/node/list', function(data){
     console.log(data);
 
     $.each(data, function(){
-        $dropdown.append($('<option />').val(this.id).text(`Node Device: ${this.location}`));
+        $dropdown.append($('<option />').val(this.nodeID).text(`Node Device: ${this.nodeDescription}`));
     });
 });
 
