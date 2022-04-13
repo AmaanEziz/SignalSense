@@ -5,10 +5,11 @@ var $deviceLocation = $("#selected-device");
 
 $.getJSON(`https://signalsense.link/api/node/?nodeId=${deviceId}`, function(data){
     console.log(`https://signalsense.link/api/node/?nodeId=${deviceId}`);
+    console.log(data)
 
 
     $.each(data, function(){
-        $deviceLocation.text(`${this.location}`);
+        $deviceLocation.text(`${this.nodeDescription}`);
     });
 });
 

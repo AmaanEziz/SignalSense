@@ -40,14 +40,8 @@ const fileRouter = require('./routes/fileRouter')();
 app.use('/api/nodeImages/', fileRouter);
 app.use('/api/node', nodeRouter);
 
-
-
-sock.on('message',function(msg,info){
-  console.log('Data received from server : ' + msg.toString());
-  console.log('Received %d bytes from %s:%d\n',msg.length,    info.address, info.port);
-});
-
-
+const intersectionRouter = require('./routes/intersectionRouter')();
+app.use('/api/intersection', intersectionRouter);
 
 // setInterval(()=>{
 //   const daquery = 'call getPhaseStream()';
