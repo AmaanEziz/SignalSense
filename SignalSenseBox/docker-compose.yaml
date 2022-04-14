@@ -1,8 +1,9 @@
 services: 
   mysqldb:
-    image: michaelingrum/signal-db:7.0
+    image: michaelingrum/signal-db:10.5
     command: --default-authentication-plugin=mysql_native_password
     restart: always
+    pull_policy: always
     environment:
       MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
       MYSQL_USER: $MYSQL_USER

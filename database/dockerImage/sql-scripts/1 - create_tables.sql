@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS Node (
   nodeDescription VARCHAR(100) NULL DEFAULT NULL,
   intersectionID VARCHAR(36) NULL DEFAULT NULL,
   ipAddress VARCHAR(20) NULL DEFAULT NULL,
-  isAlive BINARY(1) NULL DEFAULT NULL,
+  isAlive boolean NULL DEFAULT NULL,
   PRIMARY KEY (nodeID),
   INDEX nodeIntersectionFK_idx (intersectionID ASC) VISIBLE,
   CONSTRAINT nodeIntersectionFK
