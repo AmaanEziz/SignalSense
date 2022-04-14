@@ -52,27 +52,27 @@ describe(`Test GEt /api/node/light?nodeId=${nodeID}`, () => {
 });
 
 
-describe('Test GEt /api/intersection', () => {
-  it('it should GET Intersection', (done) => {
-    chai.request(url)  
-        .get('/api/intersection')
-        .end((err, res) => {
-              res.should.have.status(200);
-              console.log(res.body);
-              res.body.should.be.a('array');
-              res.body[0].should.have.property('latitude');
-              res.body[0].should.have.property('longitude');
-              res.body[0].should.have.property('intersectionID');
-          done();
-        });
-  });
-});
+// describe('Test GEt /api/intersection', () => {
+//   it('it should GET Intersection', (done) => {
+//     chai.request(url)  
+//         .get('/api/intersection')
+//         .end((err, res) => {
+//               res.should.have.status(200);
+//               console.log(res.body);
+//               res.body.should.be.a('array');
+//               res.body[0].should.have.property('latitude');
+//               res.body[0].should.have.property('longitude');
+//               res.body[0].should.have.property('intersectionID');
+//           done();
+//         });
+//   });
+// });
 
 
 describe(`Test GEt /api/node/getImage?nodeId=${nodeID}`, () => {
   it('it should GET Intersection Image', (done) => {
     chai.request(url)  
-        .get(`/api/getImage/light?nodeId=${nodeID}`)
+        .get(`/api/node/getImage?nodeId=${nodeID}`)
         .end((err, res) => {
               res.should.have.status(200);
               if (err) return done(err);
@@ -80,27 +80,94 @@ describe(`Test GEt /api/node/getImage?nodeId=${nodeID}`, () => {
   });
 });
 
+describe(`Test POST /api/node/admin`, () => {
+  it('it should POST node list', (done) => {
+      let nodes = [
+              {
+                nodeID: '1233',
+                nodeDescription: 'ABC St',
+                intersectionID: '1233',
+                ipAddress: '10.13.12.14',
+                isAlive: "Yes"
+              },
+              {
+                nodeID: '411',
+                nodeDescription: 'VBD St',
+                intersectionID: '5123',
+                ipAddress: '111.222.333',
+                isAlive: "No"
+              }
+          ]
+    chai.request(url)
+        .patch(`/api/node/admin`)
+        .send(nodes)
+        .end((err, res) => {
+              res.should.have.status(200);
+              // console.log(res.body);
+              res.body.should.be.a('array');
+              res.body[0].should.have.property('nodeID');
+              // nodeID = res.body[0].nodeID;
+              res.body[0].should.have.property('nodeDescription');
+              res.body[0].should.have.property('intersectionID');
+              res.body[0].should.have.property('ipAddress');
+              res.body[0].should.have.property('isAlive');
+          done();
+        });
+  });
+});
+
+describe(`Test DELETE /api/node/admin?nodeId=${nodeID}`, () => {
+  it('it should REMOVE Node', (done) => {
+    chai.request(url)  
+        .delete(`/api/node/admin?nodeId=${nodeID}`)
+        .end((err, res) => {
+              res.should.have.status(200);
+              console.log(res.body);
+              if (err) return done(err);
+        });
+  });
+});
+
+
 describe(`Test PATCH /api/node/setLights?node_id=${nodeID}`, () => {
-    it('it should PATCH  light', (done) => {
-        let light = [
+    it('it should PATCH a list of lights', (done) => {
+        let lights = [
                 {
-                    lightID: '152',
-                    lightPhase: 6,
-                    state: 'RED'
+                  lightID: '41',
+                  nodeID: '4d065c17-a424-11ec-ab9b-023e4cce1fdd',
+                  lightPhase: 21,
+                  lightRowID: 7,
+                  state: 'GREEN'
+                },
+                {
+                  lightID: '42',
+                  nodeID: '4d065c17-a424-11ec-ab9b-023e4cce1fdd',
+                  lightPhase: 22,
+                  lightRowID: 8,
+                  state: 'YELLOW'
+                },
+               {
+                  lightID: '43',
+                  nodeID: '4d065c17-a424-11ec-ab9b-023e4cce1fdd',
+                  lightPhase: 23,
+                  lightRowID: 9,
+                  state: 'YELLOW'
                 }
             ]
       chai.request(url)
           .patch(`/api/node/setLights?node_id=${nodeID}`)
-          .send(light)
+          .send(lights)
           .end((err, res) => {
                 res.should.have.status(200);
                 if (err) return done(err);
-                console.log(res.body);
+                // console.log(res.body);
                 res.body.should.be.a('array');
-                res.body.should.have.property('lightID').eql('152');
-                res.body.should.have.property('lightID');
-                res.body.should.have.property('lightPhase');
-                res.body.should.have.property('state');
+                res.body[0].should.have.property('lightID');
+                // nodeID = res.body[0].nodeID;
+                res.body[0].should.have.property('nodeID');
+                res.body[1].should.have.property('lightPhase');
+                res.body[2].should.have.property('lightRowID');
+                res.body[2].should.have.property('state');
             done();
           });
     });
