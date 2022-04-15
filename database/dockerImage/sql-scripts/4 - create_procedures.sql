@@ -323,7 +323,7 @@ create procedure save_image(in p_nodeID varchar(36))
 begin
 	declare img varchar(100);
 	SET img = (select concat(p_nodeID,'_', group_concat(state, lightPhase order by lightRowID desc SEPARATOR '')) 
-				ßfrom Light where nodeID = p_nodeID);
+				from Light where nodeID = p_nodeID);
     insert into ImageFileName values (DEFAULT, img);
 end$$
 DELIMITER ;
@@ -399,7 +399,7 @@ end if;
 end$$
 delimiter ;
 */
-
+/*
 DROP PROCEDURE IF EXISTS init;
 DELIMITER $$
 CREATE PROCEDURE init(IN p_num_of_phases INT, IN p_make_dummy_data BOOLEAN)
@@ -449,7 +449,7 @@ BEGIN
 	END IF;
 END $$
 DELIMITER ;
-
+*/
 drop procedure if exists get_all_data;
 DELIMITER $$
 create procedure get_all_data()
