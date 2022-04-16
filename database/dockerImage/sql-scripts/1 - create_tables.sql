@@ -8,6 +8,7 @@ CREATE TABLE IF NOT EXISTS Intersection (
   intersectionID VARCHAR(36) NOT NULL,
   latitude DECIMAL(3,3) NULL DEFAULT NULL,
   longitude DECIMAL(3,3) NULL DEFAULT NULL,
+  isDeleted BINARY(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (intersectionID));
 
 
@@ -22,6 +23,7 @@ CREATE TABLE IF NOT EXISTS Street (
   beginLongitude DECIMAL(3,3) NULL DEFAULT NULL,
   endLatitude DECIMAL(3,3) NULL DEFAULT NULL,
   endLongitude DECIMAL(3,3) NULL DEFAULT NULL,
+  isDeleted BINARY(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (streetID));
 
 
@@ -33,6 +35,7 @@ CREATE TABLE IF NOT EXISTS IntersectionStreet (
   intersectionID VARCHAR(36) NULL DEFAULT NULL,
   streetID VARCHAR(36) NULL DEFAULT NULL,
   streetPostmile DECIMAL(3,2) NULL DEFAULT NULL,
+  isDeleted BINARY(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (intersectionStreetID),
   INDEX intStreetIntFK_idx (intersectionID ASC) VISIBLE,
   INDEX intStreetStreetK_idx (streetID ASC) VISIBLE,
@@ -53,6 +56,7 @@ CREATE TABLE IF NOT EXISTS Node (
   intersectionID VARCHAR(36) NULL DEFAULT NULL,
   ipAddress VARCHAR(20) NULL DEFAULT NULL,
   isAlive BINARY(1) NULL DEFAULT NULL,
+  isDeleted BINARY(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (nodeID),
   INDEX nodeIntersectionFK_idx (intersectionID ASC) VISIBLE,
   CONSTRAINT nodeIntersectionFK
@@ -66,6 +70,7 @@ CREATE TABLE IF NOT EXISTS Node (
 CREATE TABLE IF NOT EXISTS LightStateRef (
   lightStateRefID VARCHAR(36) NOT NULL,
   state VARCHAR(100) NOT NULL,
+  isDeleted BINARY(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (lightStateRefID));
 
 
@@ -78,6 +83,7 @@ CREATE TABLE IF NOT EXISTS Light (
   lightPhase INT NULL DEFAULT NULL,
   lightRowID INT NULL DEFAULT NULL,
   state VARCHAR(100) NULL DEFAULT NULL,
+  isDeleted BINARY(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (lightID),
   INDEX lightNodeFK_idx (nodeID ASC) VISIBLE,
   INDEX lightStateFK_idx (state ASC) VISIBLE,
@@ -95,6 +101,7 @@ CREATE TABLE IF NOT EXISTS Light (
 CREATE TABLE IF NOT EXISTS PhaseType (
   phaseTypeID VARCHAR(36) NOT NULL,
   phaseTypeDescription VARCHAR(100) NULL DEFAULT NULL,
+  isDeleted BINARY(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (phaseTypeID));
 
 
@@ -106,6 +113,7 @@ CREATE TABLE IF NOT EXISTS Phase (
   phaseTypeID VARCHAR(36) NULL DEFAULT NULL,
   intersectionID VARCHAR(36) NULL DEFAULT NULL,
   phaseRowID INT NULL DEFAULT NULL,
+  isDeleted BINARY(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (phaseID),
   INDEX phaseIntersectionFK_idx (intersectionID ASC) VISIBLE,
   INDEX phaseTypeFK_idx (phaseTypeID ASC) VISIBLE,
