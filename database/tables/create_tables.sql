@@ -1,6 +1,6 @@
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE=`ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION`;
 
 -- -----------------------------------------------------
 -- Schema mydb
@@ -20,6 +20,7 @@ CREATE TABLE IF NOT EXISTS signal_dev1.Intersection (
   intersectionID VARCHAR(36) NOT NULL,
   latitude DECIMAL(3,3) NULL DEFAULT NULL,
   longitude DECIMAL(3,3) NULL DEFAULT NULL,
+  isDeleted BINARY(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (intersectionID))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
@@ -37,6 +38,7 @@ CREATE TABLE IF NOT EXISTS signal_dev1.Street (
   beginLongitude DECIMAL(3,3) NULL DEFAULT NULL,
   endLatitude DECIMAL(3,3) NULL DEFAULT NULL,
   endLongitude DECIMAL(3,3) NULL DEFAULT NULL,
+  isDeleted BINARY(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (streetID))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
@@ -51,6 +53,7 @@ CREATE TABLE IF NOT EXISTS signal_dev1.IntersectionStreet (
   intersectionID VARCHAR(36) NULL DEFAULT NULL,
   streetID VARCHAR(36) NULL DEFAULT NULL,
   streetPostmile DECIMAL(3,2) NULL DEFAULT NULL,
+  isDeleted BINARY(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (intersectionStreetID),
   INDEX intStreetIntFK_idx (intersectionID ASC) VISIBLE,
   INDEX intStreetStreetK_idx (streetID ASC) VISIBLE,
@@ -74,6 +77,7 @@ CREATE TABLE IF NOT EXISTS signal_dev1.Node (
   intersectionID VARCHAR(36) NULL DEFAULT NULL,
   ipAddress VARCHAR(20) NULL DEFAULT NULL,
   isAlive BINARY(1) NULL DEFAULT NULL,
+  isDeleted BINARY(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (nodeID),
   INDEX nodeIntersectionFK_idx (intersectionID ASC) VISIBLE,
   CONSTRAINT nodeIntersectionFK
@@ -90,6 +94,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 CREATE TABLE IF NOT EXISTS signal_dev1.LightStateRef (
   lightStateRefID VARCHAR(36) NOT NULL,
   state VARCHAR(100) NOT NULL,
+  isDeleted BINARY(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (lightStateRefID))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
@@ -105,6 +110,7 @@ CREATE TABLE IF NOT EXISTS signal_dev1.Light (
   lightPhase INT NULL DEFAULT NULL,
   lightRowID INT NULL DEFAULT NULL,
   state VARCHAR(100) NULL DEFAULT NULL,
+  isDeleted BINARY(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (lightID),
   INDEX lightNodeFK_idx (nodeID ASC) VISIBLE,
   INDEX lightStateFK_idx (state ASC) VISIBLE,
@@ -125,6 +131,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 CREATE TABLE IF NOT EXISTS signal_dev1.PhaseType (
   phaseTypeID VARCHAR(36) NOT NULL,
   phaseTypeDescription VARCHAR(100) NULL DEFAULT NULL,
+  isDeleted BINARY(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (phaseTypeID))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
@@ -142,6 +149,7 @@ CREATE TABLE IF NOT EXISTS signal_dev1.Phase (
   PRIMARY KEY (phaseID),
   INDEX phaseIntersectionFK_idx (intersectionID ASC) VISIBLE,
   INDEX phaseTypeFK_idx (phaseTypeID ASC) VISIBLE,
+  isDeleted BINARY(1) NOT NULL DEFAULT 0,
   CONSTRAINT phaseIntersectionFK
     FOREIGN KEY (intersectionID)
     REFERENCES signal_dev1.Intersection (intersectionID),
@@ -159,6 +167,7 @@ COLLATE = utf8mb4_0900_ai_ci;
 CREATE TABLE IF NOT EXISTS signal_dev1.ImageFileName (
 	imageFileNameID VARCHAR(36) NOT NULL,
   img VARCHAR(100) NOT NULL,
+  isDeleted BINARY(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (imageFileNameID))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8mb4
