@@ -86,14 +86,14 @@ function nodeController() {
           console.log(error);
           return res.status(501).send('DB is down');
         }
-
-        var { nodeID } = results[0][0];
-        const query2 = "CALL get_image(?)";
-        pool.query(query2, [nodeID], (error, results2) => {
-          return res.status(200).json(results2[0]);
-        });
+        // var { nodeID } = results[0][0];
+        // const query2 = "CALL get_image(?)";
+        // pool.query(query2, [nodeID], (error, results2) => {
+        //   return res.status(200).json(results2[0]);
+        // });
       });
     }
+    return res.status(200);
   };
   return { getAll, post, patch, patchLights };
 
@@ -101,3 +101,4 @@ function nodeController() {
 }
 
 module.exports = nodeController;
+

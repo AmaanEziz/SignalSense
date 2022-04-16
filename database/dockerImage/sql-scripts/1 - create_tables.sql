@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS Node (
   nodeDescription VARCHAR(100) NULL DEFAULT NULL,
   intersectionID VARCHAR(36) NULL DEFAULT NULL,
   ipAddress VARCHAR(20) NULL DEFAULT NULL,
-  isAlive BINARY(1) NULL DEFAULT NULL,
+  isAlive boolean NULL DEFAULT NULL,
   PRIMARY KEY (nodeID),
   INDEX nodeIntersectionFK_idx (intersectionID ASC) VISIBLE,
   CONSTRAINT nodeIntersectionFK
@@ -118,12 +118,12 @@ CREATE TABLE IF NOT EXISTS Phase (
 
 
   -- -----------------------------------------------------
-  -- Table Phase
+  -- Table ImageFileName
   -- -----------------------------------------------------
-create table `ImageFileName` (
-	`imageFileNameID` varchar(36) primary key default (UUID()),
-    `img` varchar(100) not null
-);
+CREATE TABLE IF NOT EXISTS ImageFileName (
+	imageFileNameID VARCHAR(36) NOT NULL,
+  img VARCHAR(100) NOT NULL,
+  PRIMARY KEY (imageFileNameID))
 
 
 SET SQL_MODE=@OLD_SQL_MODE;
