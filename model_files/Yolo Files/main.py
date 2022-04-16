@@ -62,12 +62,17 @@ def encode_annotation(annotation):
     :return encoded_annotation: Encoded annotation in integer form
     """
     rename_dict = {'go': 'Green',
-                   'goLeft': 'GreenLeft',
-                   'goForward': 'GreenStraight',
+                   'goLeft': 'Green',
+                   'goForward': 'Green',
+                   'goRight': 'Green',
                    'stop': 'Red',
-                   'stopLeft': 'RedLeft',
+                   'stopLeft': 'Red',
+                   'stopForward': 'Red',
+                   'stopRight': 'Red',
                    'warning': 'Yellow',
-                   'warningLeft': 'YellowLeft'
+                   'warningLeft': 'Yellow',
+                   'warningForward': 'Yellow',
+                   'warningRight': 'Yellow'
                    }
     if annotation in rename_dict:
         annotation = rename_dict[annotation]
@@ -177,7 +182,7 @@ for train_path in overall_path:
             print(clip + " annotations generated.")
 
 # Generate test data
-overall_path = ['./dataset/Annotations/Annotations/daySequence1', './dataset/Annotations/Annotations/nightSequence1']
+overall_path = ['./dataset/Annotations/Annotations/daySequence2', './dataset/Annotations/Annotations/nightSequence2']
 for test_path in overall_path:
     print("generating annotations for clip: " + test_path)
     filepath = os.path.join(test_path, 'frameannotationsbox.csv')
@@ -188,7 +193,7 @@ for test_path in overall_path:
     print(test_path + " annotations generated.")
 
 # Generate test data
-overall_path = ['./dataset/Annotations/Annotations/daySequence2', './dataset/Annotations/Annotations/nightSequence2']
+overall_path = ['./dataset/Annotations/Annotations/daySequence1', './dataset/Annotations/Annotations/nightSequence1']
 for val_path in overall_path:
     print("generating annotations for clip: " + val_path)
     filepath = os.path.join(val_path, 'frameannotationsbox.csv')

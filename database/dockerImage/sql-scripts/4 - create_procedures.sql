@@ -399,7 +399,7 @@ end if;
 end$$
 delimiter ;
 */
-/*
+
 DROP PROCEDURE IF EXISTS init;
 DELIMITER $$
 CREATE PROCEDURE init(IN p_num_of_phases INT, IN p_make_dummy_data BOOLEAN)
@@ -449,7 +449,204 @@ BEGIN
 	END IF;
 END $$
 DELIMITER ;
-*/
+
+DROP PROCEDURE IF EXISTS delete_imagefilename;
+DELIMITER $$
+CREATE PROCEDURE delete_imagefilename(IN id VARCHAR(36))
+BEGIN
+	UPDATE ImageFileName SET isDeleted = 1 WHERE imageFileNameID = id;
+    SELECT * FROM ImageFileName WHERE imageFileNameID = id;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS delete_intersection;
+DELIMITER $$
+CREATE PROCEDURE delete_intersection(IN id VARCHAR(36))
+BEGIN
+	UPDATE Intersection SET isDeleted = 1 WHERE intersectionID = id;
+    SELECT * FROM Intersection WHERE intersectionID = id;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS delete_intersection_andFK;
+DELIMITER $$
+CREATE PROCEDURE delete_intersection_andFK(IN id VARCHAR(36))
+BEGIN
+	UPDATE Intersection SET isDeleted = 1 WHERE intersectionID = id;
+    SELECT * FROM Intersection WHERE intersectionID = id;
+    
+    UPDATE IntersectionStreet SET isDeleted = 1 WHERE intersectionID = id;
+    SELECT * FROM IntersectionStreet WHERE intersectionID = id;
+    
+    UPDATE Node SET isDeleted = 1 WHERE intersectionID = id;
+    SELECT * FROM Node WHERE nodeID = id;
+    
+    UPDATE Phase SET isDeleted = 1 WHERE intersectionID = id;
+    SELECT * FROM Phase WHERE intersectionID = id;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS delete_intersectionstreet;
+DELIMITER $$
+CREATE PROCEDURE delete_intersectionstreet(IN id VARCHAR(36))
+BEGIN
+	UPDATE IntersectionStreet SET isDeleted = 1 WHERE intersectionStreetID = id;
+    SELECT * FROM IntersectionStreet WHERE intersectionStreetID = id;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS delete_street;
+DELIMITER $$
+CREATE PROCEDURE delete_street(IN id VARCHAR(36))
+BEGIN
+	UPDATE Street SET isDeleted = 1 WHERE streetID = id;
+    SELECT * FROM Street WHERE streetID = id;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS delete_street_andFK;
+DELIMITER $$
+CREATE PROCEDURE delete_street_andFK(IN id VARCHAR(36))
+BEGIN
+	UPDATE Street SET isDeleted = 1 WHERE streetID = id;
+    SELECT * FROM Street WHERE streetID = id;
+    
+    UPDATE IntersectionStreet SET isDeleted = 1 WHERE streetID = id; 
+    SELECT * FROM IntersectionStreet WHERE streetID = id;
+    
+    UPDATE Intersection SET isDeleted = 1 WHERE intersectionID IN 
+		(SELECT intersectionID FROM IntersectionStreet WHERE streetID = id);
+	SELECT * FROM Intersection WHERE intersectionID IN 
+		(SELECT intersectionID FROM IntersectionStreet WHERE streetID = id);
+        
+	UPDATE Phase SET isDeleted = 1 WHERE intersectionID IN
+		(SELECT intersectionID FROM IntersectionStreet WHERE streetID = id);
+	SELECT * FROM Phase WHERE intersectionID IN 
+		(SELECT intersectionID FROM IntersectionStreet WHERE streetID = id);
+    UPDATE Node SET isDeleted = 1 WHERE intersectionID IN
+		(SELECT intersectionID FROM IntersectionStreet WHERE streetID = id);
+	SELECT * FROM Node WHERE intersectionID IN
+		(SELECT intersectionID FROM IntersectionStreet WHERE streetID = id);
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS delete_light;
+DELIMITER $$
+CREATE PROCEDURE delete_light(IN id VARCHAR(36))
+BEGIN
+	UPDATE Light SET isDeleted = 1 WHERE lightID = id;
+    SELECT * FROM Light WHERE lightID = id;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS delete_lightstateref;
+DELIMITER $$
+CREATE PROCEDURE delete_lightstateref(IN id VARCHAR(36))
+BEGIN
+	UPDATE LightStateRef SET isDeleted = 1 WHERE lightStateRefID = id;
+    SELECT * FROM LightStateRef WHERE lightStateRefID = id;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS delete_node;
+DELIMITER $$
+CREATE PROCEDURE delete_node(IN id VARCHAR(36))
+BEGIN
+	UPDATE Node SET isDeleted = 1 WHERE nodeID = id;
+    SELECT * FROM Node WHERE nodeID = id;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS delete_phase;
+DELIMITER $$
+CREATE PROCEDURE delete_phase(IN id VARCHAR(36))
+BEGIN
+	UPDATE Phase SET isDeleted = 1 WHERE phaseID = id;
+    SELECT * FROM Phase WHERE phaseID = id;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS delete_phasetype;
+DELIMITER $$
+CREATE PROCEDURE delete_phasetype(IN id VARCHAR(36))
+BEGIN
+	UPDATE PhaseType SET isDeleted = 1 WHERE phaseTypeID = id;
+    SELECT * FROM PhaseType WHERE phaesTypeID = id;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS is_imagefilename_deleted;
+DELIMITER $$
+CREATE PROCEDURE is_imagefilename_deleted(IN id VARCHAR(36))
+BEGIN
+	SELECT isDeleted FROM ImageFileName WHERE imageFileNameID = id;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS is_intersection_deleted;
+DELIMITER $$
+CREATE PROCEDURE is_intersection_deleted(IN id VARCHAR(36))
+BEGIN
+	SELECT isDeleted FROM Intersection WHERE intersectionID = id;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS is_intersectionstreet_deleted;
+DELIMITER $$
+CREATE PROCEDURE is_intersectionstreet_deleted(IN id VARCHAR(36))
+BEGIN
+	SELECT isDeleted FROM IntersectionStreet WHERE intersectionStreetID = id;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS is_light_deleted;
+DELIMITER $$
+CREATE PROCEDURE is_light_deleted(IN id VARCHAR(36))
+BEGIN
+	SELECT isDeleted FROM Light WHERE lightID = id;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS is_lightstateref_deleted;
+DELIMITER $$
+CREATE PROCEDURE is_lightstateref_deleted(IN id VARCHAR(36))
+BEGIN
+	SELECT isDeleted FROM LightStateRef WHERE lightStateRefID = id;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS is_node_deleted;
+DELIMITER $$
+CREATE PROCEDURE is_node_deleted(IN id VARCHAR(36))
+BEGIN
+	SELECT isDeleted FROM Node WHERE nodeID = id;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS is_phase_deleted;
+DELIMITER $$
+CREATE PROCEDURE is_phase_deleted(IN id VARCHAR(36))
+BEGIN
+	SELECT isDeleted FROM Phase WHERE phaseID = id;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS is_phasetype_deleted;
+DELIMITER $$
+CREATE PROCEDURE is_phasetype_deleted(IN id VARCHAR(36))
+BEGIN
+	SELECT isDeleted FROM PhaseType WHERE phaseTypeID = id;
+END $$
+DELIMITER ;
+
+DROP PROCEDURE IF EXISTS is_street_deleted;
+DELIMITER $$
+CREATE PROCEDURE is_street_deleted(IN id VARCHAR(36))
+BEGIN
+	SELECT isDeleted FROM Street WHERE streetID = id;
+END $$
+DELIMITER ;
+
 drop procedure if exists get_all_data;
 DELIMITER $$
 create procedure get_all_data()

@@ -4,7 +4,7 @@ import client as cl
 import json
 
 def init_node(location: string='Street', ip_address: string='0.0.0.0'):
-    intersection_id = '142ebc56-b306-11ec-98f3-0242ac130002'
+    intersection_id = '2166b327-bc79-11ec-8d50-0242ac130002'
     # TEST 1: Post A new node in the server.
     status, data = cl.postNewNode(location, intersection_id, ip_address, 1)
     
@@ -16,6 +16,23 @@ def init_node(location: string='Street', ip_address: string='0.0.0.0'):
     else:
         print("could not create node")
         return status
+
+def delete_node():
+    if doesFileExists('./node_data.json'):
+        node_id = get_node_id()
+
+        status = cl.deleteNode(node_id)
+
+        if status:
+            os.remove('./node_data.json')
+            if doesFileExists('./lights.json'):
+                os.remove('./lights.json')
+            return status
+        else:
+            return status
+    else:
+        print('ERROR: Node has not been created yet.')
+        return 0
 
 def create_light(state: string='0', phase: int=0):
     node_id = get_node_id()
@@ -29,7 +46,7 @@ def create_light(state: string='0', phase: int=0):
             with open('lights.json', 'r') as openfile:
                 # Reading from json file
                 lights = json.load(openfile)
-                number  = str(len(lights) + 1)
+                number  = str(len(lights))
                 light_data = light_data[0]
                 lights[number] =  light_data['lightID']       
             
@@ -50,28 +67,35 @@ def patch_light(light: string=0, status: string='0'):
     return status
 
 def get_node_id():
-    with open('node_data.json', 'r') as openfile:
-    # Reading from json file
-        data = json.load(openfile)
-    return data['nodeID']
+    if doesFileExists('./node_data.json'):
+        with open('node_data.json', 'r') as openfile:
+        # Reading from json file
+            data = json.load(openfile)
+        return data['nodeID']
+    else:
+        return 0
 
 def get_intersection_id():
-    with open('node_data.json', 'r') as openfile:
-    # Reading from json file
-        data = json.load(openfile)
-    return data['intersectionID']
+    if doesFileExists('./node_data.json'):
+        with open('node_data.json', 'r') as openfile:
+        # Reading from json file
+            data = json.load(openfile)
+        return data['intersectionID']
+    return 0
 
 def get_light_id(light_number: string='0'):
-    with open('lights.json', 'r') as openfile:
-    # Reading from json file
-        lights = json.load(openfile)
-    return lights[light_number]
+    if doesFileExists('./lights.json'):
+        with open('lights.json', 'r') as openfile:
+        # Reading from json file
+            lights = json.load(openfile)
+        return lights[light_number]
+    return 0
 
 def doesFileExists(filePathAndName):
     return os.path.exists(filePathAndName)
 
 # STEP 1: Initialize a Node.
-#status = init_node('NORTHBOUND HW 88 and Macville', '10.0.0.16')
+# status = init_node('NORTHBOUND HW 88 and Macville', '10.0.0.16')
 
 #STEP 2: Add any necessary lights.
 # (0, 'NOT_FOUND');
@@ -89,4 +113,4 @@ def doesFileExists(filePathAndName):
 
 # STEP 3: Patch lights as the ML model is running
 # For light status, refer to chart above.
-# USE: patch_light(light number, light status)
+# USE: status = patch_light(light number, light status)

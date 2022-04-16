@@ -62,7 +62,6 @@ setInterval(()=>{
     else{
       // Query the NTCIP stream for a given intersection
       const ntcip_query = 'call get_phase_stream(?)';
-      console.log(result);
       pool2.query(ntcip_query, result[0].intersectionID, (error, results) =>{
         //check if query was successful
         if(error) {
@@ -73,9 +72,6 @@ setInterval(()=>{
           sock.send(JSON.stringify(results), 2453, '10.0.15.255', function(error){            
             if(error){
               console.log(error);
-            }
-            else {
-              console.log('NTCIP stream has been sent.');
             }
           });
         }
