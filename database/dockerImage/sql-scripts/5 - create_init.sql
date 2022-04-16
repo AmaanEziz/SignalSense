@@ -50,7 +50,7 @@ IF p_make_dummy_data THEN
 end if;
 end$$
 delimiter ;
-*/s
+*/
 
 DROP PROCEDURE IF EXISTS init;
 DELIMITER $$
@@ -102,4 +102,3 @@ BEGIN
 END $$
 DELIMITER ;
 
-call init(8, true);

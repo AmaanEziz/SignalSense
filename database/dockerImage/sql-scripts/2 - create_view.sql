@@ -9,12 +9,12 @@ create view Phase_vw as (
      order by intersectionID, phaseRowId
 );
 
-drop function if exists get_image_state;
-DELIMITER $$
-create function get_image_state(p_nodeID varchar(36))
-returns varchar(100)
-/*NOT DETERMINISTIC*/
-begin
-	return (select concat(p_nodeID,'_', group_concat(state, lightPhase order by lightRowID desc SEPARATOR '')) from Light where nodeID = p_nodeID);
-end$$
-DELIMITER ;
+-- drop function if exists get_image_state;
+-- DELIMITER $$
+-- create function get_image_state(p_nodeID varchar(36))
+-- returns varchar(100)
+-- /*NOT DETERMINISTIC*/
+-- begin
+-- 	return (select concat(p_nodeID,'_', group_concat(state, lightPhase order by lightRowID desc SEPARATOR '')) from Light where nodeID = p_nodeID);
+-- end$$
+-- DELIMITER ;
