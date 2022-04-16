@@ -5,11 +5,11 @@ const server = require('../index')
 const should = chai.should();
 chai.use(chaiHttp);
 
-// var nodeID = '1bfd50dc-b312-11ec-a7b9-0242ac120002';  // local nodeID
-var nodeID = '4d065c17-a424-11ec-ab9b-023e4cce1fdd'; // prod NodeID
+var nodeID = '1bfd50dc-b312-11ec-a7b9-0242ac120002';  // local nodeID
+// var nodeID = '4d065c17-a424-11ec-ab9b-023e4cce1fdd'; // prod NodeID
 // var nodeID; 
-const url = 'https://signalsense.link'; 
-// const localUrl = http://localhost:3000
+// const url = 'https://signalsense.link'; 
+const url = 'http://localhost:3000'
 
 describe('Test GEt /api/node/list', () => {
     it('it should GET Node List', (done) => {
@@ -69,63 +69,51 @@ describe(`Test GEt /api/node/light?nodeId=${nodeID}`, () => {
 // });
 
 
-describe(`Test GEt /api/node/getImage?nodeId=${nodeID}`, () => {
-  it('it should GET Intersection Image', (done) => {
-    chai.request(url)  
-        .get(`/api/node/getImage?nodeId=${nodeID}`)
-        .end((err, res) => {
-              res.should.have.status(200);
-              if (err) return done(err);
-        });
-  });
-});
+// describe(`Test GEt /api/node/getImage?nodeId=${nodeID}`, () => {
+//   it('it should GET Intersection Image', (done) => {
+//     chai.request(url)  
+//         .get(`/api/node/getImage?nodeId=${nodeID}`)
+//         .end((err, res) => {
+//               res.should.have.status(200);
+//               if (err) return done(err);
+//         });
+//   });
+// });
 
-describe(`Test POST /api/node/admin`, () => {
-  it('it should POST node list', (done) => {
-      let nodes = [
-              {
-                nodeID: '1233',
-                nodeDescription: 'ABC St',
-                intersectionID: '1233',
-                ipAddress: '10.13.12.14',
-                isAlive: "Yes"
-              },
-              {
-                nodeID: '411',
-                nodeDescription: 'VBD St',
-                intersectionID: '5123',
-                ipAddress: '111.222.333',
-                isAlive: "No"
-              }
-          ]
+describe(`Test POST ${url}/api/node/admin`, () => {
+  it('it should POST a node', (done) => {
+      let nodes =         {
+        "location": "State University Ave",
+        "intersectionID": "97c81ccc-b4a2-11ec-9049-0242ac120002",
+        "ipaddress": "000.000.0.0",
+        "isalive": true
+      };
     chai.request(url)
-        .patch(`/api/node/admin`)
+        .post(`/api/node/admin`)
         .send(nodes)
         .end((err, res) => {
-              res.should.have.status(200);
+              res.should.have.status(201);
               // console.log(res.body);
               res.body.should.be.a('array');
               res.body[0].should.have.property('nodeID');
-              // nodeID = res.body[0].nodeID;
+              nodeID = res.body[0].nodeID;
               res.body[0].should.have.property('nodeDescription');
               res.body[0].should.have.property('intersectionID');
               res.body[0].should.have.property('ipAddress');
               res.body[0].should.have.property('isAlive');
           done();
         });
-  });
-});
-
-describe(`Test DELETE /api/node/admin?nodeId=${nodeID}`, () => {
-  it('it should REMOVE Node', (done) => {
-    chai.request(url)  
-        .delete(`/api/node/admin?nodeId=${nodeID}`)
-        .end((err, res) => {
-              res.should.have.status(200);
-              console.log(res.body);
-              if (err) return done(err);
-        });
-  });
+  
+      })
+      it(`it should REMOVE Node: ${nodeID}`, (done) => {
+        chai.request(url)  
+            .delete(`/api/node/admin?nodeId=${nodeID}`)
+            .end((err, res) => {
+                  res.should.have.status(200);
+                  console.log(res.body);
+                  if (err) return done(err);
+            });
+      });
 });
 
 
@@ -133,25 +121,25 @@ describe(`Test PATCH /api/node/setLights?node_id=${nodeID}`, () => {
     it('it should PATCH a list of lights', (done) => {
         let lights = [
                 {
-                  lightID: '41',
-                  nodeID: '4d065c17-a424-11ec-ab9b-023e4cce1fdd',
-                  lightPhase: 21,
-                  lightRowID: 7,
-                  state: 'GREEN'
+                  "lightID" : "41",
+                  "nodeID" : "4d065c17-a424-11ec-ab9b-023e4cce1fdd",
+                  "lightPhase" : 21,
+                  "lightRowID" : 7,
+                  "state" : "GREEN"
                 },
                 {
-                  lightID: '42',
-                  nodeID: '4d065c17-a424-11ec-ab9b-023e4cce1fdd',
-                  lightPhase: 22,
-                  lightRowID: 8,
-                  state: 'YELLOW'
+                  "lightID": '42',
+                  "nodeID": '4d065c17-a424-11ec-ab9b-023e4cce1fdd',
+                  "lightPhase": 22,
+                  "lightRowID": 8,
+                  "state" : 'YELLOW'
                 },
                {
-                  lightID: '43',
-                  nodeID: '4d065c17-a424-11ec-ab9b-023e4cce1fdd',
-                  lightPhase: 23,
-                  lightRowID: 9,
-                  state: 'YELLOW'
+                  "lightID": '43',
+                  "nodeID": '4d065c17-a424-11ec-ab9b-023e4cce1fdd',
+                  "lightPhase": 23,
+                  "lightRowID": 9,
+                  "state": 'YELLOW'
                 }
             ]
       chai.request(url)
