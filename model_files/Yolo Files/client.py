@@ -28,11 +28,14 @@ def postNewNode(loc: string = "Location", intersection_id: string='0000', ip: st
         newNodeData = json.loads(r.text)
         r.raise_for_status()
         status = 1
-    except requests.HTTPError:
+    except requests.HTTPError as err:
+        print(err)
         status = 0
-    except requests.Timeout:
+    except requests.Timeout as err:
+        print(err)
         status = 0
-    except requests.ConnectionError:
+    except requests.ConnectionError as err:
+        print(err)
         status = 0
     finally:
         return status, newNodeData
@@ -50,7 +53,7 @@ def patchNode(id: int = 0, loc: string = "Location", ip: string = "IP Address", 
     # Init data
     nodeData = {"id" : id, "location" : loc, "ipaddress" : ip, "isalive" : isAlive}
     newNodeData = None
-    serverName = 'http://ec2-3-141-8-69.us-east-2.compute.amazonaws.com:3000/api/node/admin' 
+    serverName = 'http://localhost:3000/api/node/admin' 
     args = {"nodeId":id}
     
     try:
@@ -77,18 +80,21 @@ def patchNode(id: int = 0, loc: string = "Location", ip: string = "IP Address", 
 #
 # Return: 
 #   A staus code and dictionary object.
-def deleteNode(id: int = 0):
+def deleteNode(id: string):
     args = {"nodeId" : id}
     
     try:
-        r = requests.delete('http://ec2-3-141-8-69.us-east-2.compute.amazonaws.com:3000/api/node/admin', params=args)
+        r = requests.delete('http://localhost:3000/api/node/admin', params=args)
         r.raise_for_status()
         status = 1
-    except requests.HTTPError:
+    except requests.HTTPError as err:
+        print(err)
         status = 0
-    except requests.Timeout:
+    except requests.Timeout as err:
+        print(err)
         status = 0
-    except requests.ConnectionError:
+    except requests.ConnectionError as err:
+        print(err)
         status = 0
     finally:
         return status
@@ -113,11 +119,14 @@ def postNewLight(id: int = 0, state: string = "0", phase: int = 0):
         light_data = json.loads(r.text)
         r.raise_for_status()
         status = 1
-    except requests.HTTPError:
+    except requests.HTTPError as err:
+        print(err)
         status = 0
-    except requests.Timeout:
+    except requests.Timeout as err:
+        print(err)
         status = 0
-    except requests.ConnectionError:
+    except requests.ConnectionError as err:
+        print(err)
         status = 0
     finally:
         return status, light_data
@@ -131,7 +140,7 @@ def postNewLight(id: int = 0, state: string = "0", phase: int = 0):
 #
 # Return: 
 #   A staus code.
-def patchLight(id: int = 0, light_id: int = 0, state: string = '0'):
+def patchLight(id: string = '0', light_id: string = '0', state: string = '0'):
     
     status, lights = getLights(id)
 
@@ -140,21 +149,22 @@ def patchLight(id: int = 0, light_id: int = 0, state: string = '0'):
         return status
 
     # Modify a light with new state
+    tempLight = None
     for light in lights:
         if light["nodeID"] == id:
             if light["lightID"] == light_id:
                 light["state"] = state
-                status = 1
-            else:
-                status = 0
-        else:
-            status = 0
+                tempLight = light
     
     # Check to see if the light data was modifed successfully.
-    if not status:
-        return status
+    if tempLight == None:
+        print('ERROR: Could not find node based on node ID and light ID.')
+        return 0
 
-    newLights = {"lights" : lights}
+    # Format data for HTTP Request
+    array = [1]
+    array[0] = tempLight
+    newLights = {"lights" : array}
     args ={"node_id":id}
 
     try:
@@ -162,24 +172,27 @@ def patchLight(id: int = 0, light_id: int = 0, state: string = '0'):
         r = requests.patch('http://localhost:3000/api/node/setLights', json=newLights, params=args)
         r.raise_for_status()
         status = 1
-    except requests.HTTPError:
+    except requests.HTTPError as err:
+        print(err)
         status = 0
-    except requests.Timeout:
+    except requests.Timeout as err:
+        print(err)
         status = 0
-    except requests.ConnectionError:
+    except requests.ConnectionError as err:
+        print(err)
         status = 0
     finally:
         return status
 
 # Purpose: 
-#   Patch a light on the database.
+#   Get all the lights from the database.
 #
 # Error Handling: 
 #   An unsuccessfull HTTP return code, request timeout, or connection error
 #   will trigger an exception.
 #
 # Return: 
-#   A staus code.
+#   A staus code. 1 means success. 0 means error.
 def getLights(id):
     args = {"nodeId" : id}
     lightData = None
@@ -190,78 +203,14 @@ def getLights(id):
         r.raise_for_status()
         lightData = json.loads(r.text)
         status = 1
-    except requests.HTTPError:
+    except requests.HTTPError as err:
+        print(err)
         status = 0
-    except requests.Timeout:
+    except requests.Timeout as err:
+        print(err)
         status = 0
-    except requests.ConnectionError:
+    except requests.ConnectionError as err:
+        print(err)
         status = 0
     finally:
         return status, lightData
-
-
-# ------------CODE NOT CURRENTLY BEING USED---------------------
-
-# Module used to retrieve node data.
-# Node data is returned as a array of dictionaries, with
-# each dictionary containing the following data format: 
-#   - id : int , light_id : int, state :  str, light_phase : int
-#
-# This module returns None when an error occurs retrieving
-# node data or an error connecting to the server.
-
-def getNodeData(nodeId=0):
-    data = ''
-    code = 'HTTP/1.1 200 OK'
-
-    #Port Number must match the server port number
-    serverPort = 3000
-
-    #Define Server Name
-    serverName = 'ec2-3-141-8-69.us-east-2.compute.amazonaws.com' 
-
-    #Define GET String to retrieve light ID
-    path = '/api/node/light?nodeId=' + str(nodeId)
-
-    #Define GET Request string
-    req = 'GET ' + path +  ' HTTP/1.1\r\nHost: ec2-3-141-8-69.us-east-2.compute.amazonaws.com\r\n\r\n'
-
-    #Define the socket object
-    clientSocket = socket(AF_INET, SOCK_STREAM)
-
-    try:      
-        clientSocket.connect((serverName, serverPort))
-        clientSocket.send(bytes(req, "utf-8"))
-
-        full_msg = ''
-        
-        #Wait for reponse with new data
-        while True: 
-            new_data = clientSocket.recv(1024)
-            full_msg = full_msg + new_data.decode()
-            if not new_data:
-                break
-
-        ret_json_data = full_msg.split("\n")
-        resp_code = ret_json_data[0]
-
-        #If HTTP repsonse code is not 200, raise excepetion
-        if(resp_code.find(code) == -1) :
-            raise ResponseCodeError
-
-        #Retrieve the JSON data
-        data = ret_json_data[9]
-        data = json.loads(data)
-        
-    except socket.timeout as err:
-        data = None
-
-    except socket.error as err:
-        data = None
-    except ResponseCodeError as err:
-        data = None
-    finally:
-        clientSocket.close()
-        return data
-
-# ------------CODE NOT CURRENTLY BEING USED---------------------
