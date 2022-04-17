@@ -1,8 +1,8 @@
 drop procedure if exists add_street;
 DELIMITER $$
 create procedure add_street(
-	in in_streetName VARCHAR(45), in in_streetDirection VARCHAR(45), in in_beginLatitude decimal(3,3), 
-	in in_beginLongitude  decimal(3,3), in in_endLatitude  decimal(3,3), in in_endLongitude  decimal(3,3))
+	in in_streetName VARCHAR(45), in in_streetDirection VARCHAR(45), in in_beginLatitude decimal(6,3), 
+	in in_beginLongitude  decimal(6,3), in in_endLatitude  decimal(6,3), in in_endLongitude  decimal(6,3))
 
 begin
 	declare uuid varchar(36);
@@ -22,7 +22,7 @@ DELIMITER ;
 */
 drop procedure if exists add_intersection;
 DELIMITER $$
-create procedure add_intersection(IN lat decimal(3,3), IN lon decimal(3,3))
+create procedure add_intersection(IN lat decimal(6,3), IN lon decimal(6,3))
 begin
 	declare uuid varchar(36);
     SET uuid = (select uuid());
@@ -37,7 +37,7 @@ DELIMITER ;
 */
 drop procedure if exists add_intersectionStreet;
 DELIMITER $$
-CREATE PROCEDURE add_intersectionStreet(IN intersectionID VARCHAR(36), IN streetID VARCHAR(36), streetPM DECIMAL(3, 2))
+CREATE PROCEDURE add_intersectionStreet(IN intersectionID VARCHAR(36), IN streetID VARCHAR(36), streetPM DECIMAL(6, 3))
 begin
 	DECLARE uuid VARCHAR(36);
 	SET uuid = (SELECT UUID());
@@ -54,7 +54,7 @@ DELIMITER ;
 */
 DROP PROCEDURE IF EXISTS add_intersection_w_IS;
 DELIMITER $$
-CREATE PROCEDURE add_intersection_w_IS(IN lat DECIMAL(3, 3), IN lon DECIMAL(3, 3), IN sID VARCHAR(36), sPM DECIMAL(3, 2))
+CREATE PROCEDURE add_intersection_w_IS(IN lat DECIMAL(6, 3), IN lon DECIMAL(6, 3), IN sID VARCHAR(36), sPM DECIMAL(6, 3))
 BEGIN
 	DECLARE uuid VARCHAR(36);
     DECLARE is_uuid VARCHAR(36);
@@ -263,6 +263,8 @@ begin
 	 select * from Light where lightID = temp_id;
 END$$
 DELIMITER ;
+
+DROP PROCEDURE IF EXISTS patch_light;
 DELIMITER $$
 create procedure patch_light(IN in_id int, IN in_light_phase int, IN in_state varchar(100))
 begin
