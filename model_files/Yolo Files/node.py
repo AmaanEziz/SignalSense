@@ -4,7 +4,7 @@ import client as cl
 import json
 
 def init_node(location: string='Street', ip_address: string='0.0.0.0'):
-    intersection_id = '2166b327-bc79-11ec-8d50-0242ac130002'
+    intersection_id = '0d38cf2a-bdfc-11ec-880b-0242ac120002'
     # TEST 1: Post A new node in the server.
     status, data = cl.postNewNode(location, intersection_id, ip_address, 1)
     

@@ -79,3 +79,46 @@ setInterval(()=>{
     }
   });
 }, 100);
+
+//Update server
+
+const https = require('https');
+
+var query = 'call get_all_data()';             
+setInterval(() => {
+  pool2.query(query, null, (error, results) => {
+    if (error) {
+      console.log(error);
+      return;
+    }
+    data = results[0][0].temp;
+    console.log(data);
+
+    var options = {
+      hostname: 'signalsense.link',
+      port: 443,
+      path: '/api/intersection/updateAll',
+      method: 'PUT',
+      headers: {
+           'Content-Type': 'application/JSON',
+           'Content-Length': data.length
+         }
+    };
+    var req = https.request(options, (res) => {
+      console.log('statusCode:', res.statusCode);
+      console.log('headers:', res.headers);
+    
+      res.on('data', (d) => {
+        console.log(res)
+      });
+    });
+    
+    req.on('error', (e) => {
+      console.error(e);
+    });
+    console.log(data);
+    req.write(data);
+    req.end();
+
+  });
+}, 5000); //every 500 seconds, for testing

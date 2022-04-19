@@ -9,3 +9,8 @@ on-device/client/node_data.json
 SignalSenseBox/package-lock.json
 backend/.env.stg
 backend/.env.prod_old
+model_files/Yolo Files/node_data.json
+model_files/Yolo Files/lights.json
+model_files/Yolo Files/__pycache__/client.cpython-38.pyc
+model_files/Yolo Files/__pycache__/node.cpython-38.pyc
+model_files/Yolo Files/*

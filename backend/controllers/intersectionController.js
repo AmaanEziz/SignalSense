@@ -8,6 +8,7 @@ function intersectionController() {
             return res.status(501).send('DB is down');
           }
           else {
+            console.log(results);
             return res.status(200).send('"status": "OK"');
           }
         });
