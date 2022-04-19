@@ -5,7 +5,7 @@ import statistics as stats
 import natsort
 import numpy as np
 
-import client as cl
+import node as cl
 
 def assign_lights(folder_name):
     lights = []
@@ -61,10 +61,10 @@ def assign_lights(folder_name):
 folder_name = natsort.natsorted(os.listdir('yolov5/runs/detect/'))[-1]
 lights = assign_lights(folder_name)
 
-if not os.exists("node_data.json"):
+if not os.path.exists("node_data.json"):
     cl.init_node("State University Ave", "000.000.0.0")
 
-if not os.exists("lights.json"):
+if not os.path.exists("lights.json"):
     for x in lights:
         cl.create_light(0, 0)
 
