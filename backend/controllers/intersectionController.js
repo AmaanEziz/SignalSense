@@ -14,16 +14,16 @@ function intersectionController() {
         });
     }
     function getStream(req, res){
-      var { intersectionID } = req.body;
       const query = "CALL get_phase_stream(?)";
-      pool.query(query, [intersectionID], (error, results) => {
+      pool.query(query, [req.query.intersectionID], (error, results) => {
         if (error) {
           console.log(error);
           return res.status(501).send('Unable to generate the stream.\nContact Support');
         }
         else {
           console.log(results);
-          return res.status(200).JSON(results);
+          res.set('Content-Type', 'application/json');
+          return res.status(200).json(results[0]);
         }
       });
     }

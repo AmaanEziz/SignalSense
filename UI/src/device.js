@@ -2,22 +2,25 @@ var deviceId = sessionStorage.getItem('nodeId');
 var selectedRow = 0;
 var selectedLight = 0;
 var $deviceLocation = $("#selected-device");
+var $streamText = $("#streamBody");
 
 var intersectionID = '';
 $.getJSON(`https://signalsense.link/api/node/?nodeId=${deviceId}`, function(data){
     $.each(data, function(){
+        console.log(this);
+        console.log('intersection = ' + this.intersectionID);
         $deviceLocation.text(`${this.nodeDescription}`);
         intersectionID = this.intersectionID;
+        $.getJSON(`https://signalsense.link/api/intersection/stream?intersectionID=${intersectionID}`, function(data){
+            console.log(this);
+            $.each(data, function(){
+                var d = JSON.stringify(this)
+                $streamText.text(`${d}`);
+            });
+        });
     });
 });
 
-
-$.getJSON(`https://signalsense.link/api/intersection/stream?intersectionID=${intersectionID}`, function(data){
-    console.log(this);
-    $.each(data, function(){
-        $streamBody.text(`${this}`);
-    });
-});
 
 $.getJSON(`https://signalsense.link/api/node/light?nodeId=${deviceId}` , function(data) {
     var tbl_body = document.createElement("tbody");
