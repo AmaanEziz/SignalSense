@@ -18,8 +18,8 @@ USE signal_dev1 ;
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS signal_dev1.Intersection (
   intersectionID VARCHAR(36) NOT NULL,
-  latitude DECIMAL(3,3) NULL DEFAULT NULL,
-  longitude DECIMAL(3,3) NULL DEFAULT NULL,
+  latitude DECIMAL(6,3) NULL DEFAULT NULL,
+  longitude DECIMAL(6,3) NULL DEFAULT NULL,
   isDeleted BINARY(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (intersectionID))
 ENGINE = InnoDB
@@ -34,10 +34,10 @@ CREATE TABLE IF NOT EXISTS signal_dev1.Street (
   streetID VARCHAR(36) NOT NULL,
   streetName VARCHAR(45) NULL DEFAULT NULL,
   streetDirection VARCHAR(45) NULL DEFAULT NULL,
-  beginLatitude DECIMAL(3,3) NULL DEFAULT NULL,
-  beginLongitude DECIMAL(3,3) NULL DEFAULT NULL,
-  endLatitude DECIMAL(3,3) NULL DEFAULT NULL,
-  endLongitude DECIMAL(3,3) NULL DEFAULT NULL,
+  beginLatitude DECIMAL(6,3) NULL DEFAULT NULL,
+  beginLongitude DECIMAL(6,3) NULL DEFAULT NULL,
+  endLatitude DECIMAL(6,3) NULL DEFAULT NULL,
+  endLongitude DECIMAL(6,3) NULL DEFAULT NULL,
   isDeleted BINARY(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (streetID))
 ENGINE = InnoDB
@@ -52,7 +52,7 @@ CREATE TABLE IF NOT EXISTS signal_dev1.IntersectionStreet (
   intersectionStreetID VARCHAR(36) NOT NULL,
   intersectionID VARCHAR(36) NULL DEFAULT NULL,
   streetID VARCHAR(36) NULL DEFAULT NULL,
-  streetPostmile DECIMAL(3,2) NULL DEFAULT NULL,
+  streetPostmile DECIMAL(6,3) NULL DEFAULT NULL,
   isDeleted BINARY(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (intersectionStreetID),
   INDEX intStreetIntFK_idx (intersectionID ASC) VISIBLE,

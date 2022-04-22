@@ -1,8 +1,8 @@
 drop procedure if exists add_street;
 DELIMITER $$
 create procedure add_street(
-	in in_streetName VARCHAR(45), in in_streetDirection VARCHAR(45), in in_beginLatitude decimal(3,3),
-	in in_beginLongitude  decimal(3,3), in in_endLatitude  decimal(3,3), in in_endLongitude  decimal(3,3))
+	in in_streetName VARCHAR(45), in in_streetDirection VARCHAR(45), in in_beginLatitude decimal(6,3),
+	in in_beginLongitude  decimal(6,3), in in_endLatitude  decimal(6,3), in in_endLongitude  decimal(6,3))
 
 begin
 	declare uuid varchar(36);
@@ -23,7 +23,7 @@ DELIMITER ;
 */
 drop procedure if exists add_intersection;
 DELIMITER $$
-create procedure add_intersection(IN lat decimal(3,3), IN lon decimal(3,3))
+create procedure add_intersection(IN lat decimal(6,3), IN lon decimal(6,3))
 begin
 	declare uuid varchar(36);
     SET uuid = (select uuid());
@@ -38,7 +38,7 @@ DELIMITER ;
 */
 drop procedure if exists add_intersectionStreet;
 DELIMITER $$
-CREATE PROCEDURE add_intersectionStreet(IN intersectionID VARCHAR(36), IN streetID VARCHAR(36), streetPM DECIMAL(3, 2))
+CREATE PROCEDURE add_intersectionStreet(IN intersectionID VARCHAR(36), IN streetID VARCHAR(36), streetPM DECIMAL(6, 3))
 begin
 	DECLARE uuid VARCHAR(36);
 	SET uuid = (SELECT UUID());
@@ -317,7 +317,7 @@ end$$
 DELIMITER ;
 */
 
-drop procedure if exists save_image;
+DROP PROCEDURE IF EXISTS save_image;
 DELIMITER $$
 create procedure save_image(in p_nodeID varchar(36))
 begin
@@ -672,8 +672,8 @@ if JSON_VALID(p_data) THEN
 				p_data,
 				"$.intersections[*]" COLUMNS(
 					intersectionID VARCHAR(36) path "$.intersectionID",
-					latitude decimal(3,3) path "$.latitude",
-					longitude decimal(3,3) path "$.longitude"
+					latitude decimal(6,3) path "$.latitude",
+					longitude decimal(6,3) path "$.longitude"
 					)
 			) as it
 		ON DUPLICATE KEY UPDATE latitude = it.latitude, longitude = it.longitude;
