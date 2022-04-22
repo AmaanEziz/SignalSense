@@ -3,18 +3,23 @@ var selectedRow = 0;
 var selectedLight = 0;
 var $deviceLocation = $("#selected-device");
 
+var intersectionID = '';
 $.getJSON(`https://signalsense.link/api/node/?nodeId=${deviceId}`, function(data){
-    console.log(`https://signalsense.link/api/node/?nodeId=${deviceId}`);
-    console.log(data)
-
-
     $.each(data, function(){
         $deviceLocation.text(`${this.nodeDescription}`);
+        intersectionID = this.intersectionID;
+    });
+});
+
+
+$.getJSON(`https://signalsense.link/api/intersection/stream?intersectionID=${intersectionID}`, function(data){
+    console.log(this);
+    $.each(data, function(){
+        $streamBody.text(`${this}`);
     });
 });
 
 $.getJSON(`https://signalsense.link/api/node/light?nodeId=${deviceId}` , function(data) {
-    console.log(data);
     var tbl_body = document.createElement("tbody");
     $.each(data, function() {
         var tbl_row = tbl_body.insertRow();
