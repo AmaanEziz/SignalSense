@@ -109,15 +109,15 @@ begin
 with colors as (
 select *,
 case
-	WHEN state = 'RED' then 1
+	WHEN state = '1' then 1
     ELSE 0
 END as reds,
 case
-	WHEN state = 'GREEN' then 1
+	WHEN state = '3' then 1
     ELSE 0
 END as greens,
 case
-	WHEN state = 'YELLOW' then 1
+	WHEN state = '2' then 1
     ELSE 0
 END as yellows
 from Phase_vw where intersectionID = in_intersection_in
@@ -125,13 +125,13 @@ order by phaseRowId
 ), color_str as(
 select
 	lpad(CONV(group_concat(colors.reds order by phaseRowId desc SEPARATOR ''), 2, 16), 2, '0') red_str,
-	lpad(CONV(group_concat(colors.greens order by phaseRowId desc SEPARATOR ''), 2, 16), 2, '0') green_str,
-    lpad(CONV(group_concat(colors.yellows order by phaseRowId desc SEPARATOR ''), 2, 16), 2, '0') yellow_str
+    lpad(CONV(group_concat(colors.yellows order by phaseRowId desc SEPARATOR ''), 2, 16), 2, '0') yellow_str,
+	lpad(CONV(group_concat(colors.greens order by phaseRowId desc SEPARATOR ''), 2, 16), 2, '0') green_str
 from colors
 ), cnt_str as(
 	select lpad(CONV(count(*), 10, 16), 2, '0') num_of_phases from Phase where intersectionID = in_intersection_in
 ), phase_str as (
-select group_concat(concat(lpad(CONV(Phase.phaseRowId, 10, 16), 2, '0'), ':', '00:00:00:00:00:00:00:00:00:00:00:00') SEPARATOR ':') phase_str from Phase where intersectionID = in_intersection_in order by phaseRowId
+select group_concat(concat(lpad(CONV(Phase.phaseRowId, 10, 16), 2, '0'), ':', '00:00:00:00:00:00:00:00:00:00:00:00') order by Phase.phaseRowId SEPARATOR ':') phase_str from Phase where intersectionID = in_intersection_in order by phaseRowId
 )
 select CONCAT('CD:', cnt_str.num_of_phases, ':', phase_str.phase_str, ':',
 			  color_str.red_str, ':', color_str.yellow_str, ':', color_str.green_str, ':',
@@ -322,7 +322,7 @@ DELIMITER $$
 create procedure save_image(in p_nodeID varchar(36))
 begin
 	declare img varchar(100);
-	SET img = (select concat(p_nodeID,'_', group_concat(state, lightPhase order by lightRowID desc SEPARATOR '')) 
+	SET img = (select concat(p_nodeID,'_', group_concat(state order by lightRowID desc SEPARATOR '')) 
 				from Light where nodeID = p_nodeID);
     insert into ImageFileName values (DEFAULT, img);
 end$$

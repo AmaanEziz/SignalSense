@@ -41,18 +41,30 @@
                 <table id="light-table" class="table table-hover" style="margin-top: 5%; border-radius: 0.5em;">
                     <thead>
                       <tr style="margin-top: 5%; left:100px;">
-                        <th scope="col">Light ID</th>
-                        <th scope="col">Status</th>
                         <th scope="col">Phase</th>
+                        <th scope="col">Light ID</th>
+                        <th scope="col">State</th>
                       </tr>
                     </thead>
                   </table>
             </div>
-            <div class="container mt-3">              
-              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#myModal" onclick="updateModal()">
-                Configure Light Phase
-              </button>
+            <hr class="mb-5"/>
+            <!--Grid row-->
+            <div class="row">
+            <!--Grid column-->
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">
+                      NTCIP STREAM
+                    </div>
+                    <div class="card-body">
+                      <p class="card-text"  id="streamBody"></p>
+                    </div>
+                  </div>  
             </div>
+            <!--Grid column-->
+            </div>
+            <!--Grid row-->
 
         <!-- The Modal -->
         <div class="modal" id="myModal">

@@ -93,16 +93,17 @@ function nodeController(Node) {
     if (req.query.nodeId == null) {
       return res.status(400).send('Missing query pram nodeId ');
     }
-    const query = "CALL GET_IMAGE_URL(?)";
+    const query = "CALL get_image(?)";
     pool.query(query, [req.query.nodeId], (error, results) => {
-      if (error) {
+    console.log(results);  
+    if (error) {
         console.log(error);
         return res.redirect('/api/nodeImages/files/something_went_wrong.pineapple.png');
       }
-      else if (results[1][0].fileName == null) {
+      else if (results[0][0].img == null) {
         return res.redirect('/api/nodeImages/files/something_went_wrong.pineapple.png');
       } else {
-        var path = '/api/nodeImages/files/' + results[1][0].fileName;
+        var path = '/api/nodeImages/files/' + results[0][0].img;
         return res.redirect(path);
       }
     });
