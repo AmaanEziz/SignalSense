@@ -16,6 +16,9 @@ function routes(Node) {
     nodeRouter.route('/')
         .get(nodeController.getOne);
 
+    nodeRouter.route('/intersection')
+        .get(nodeController.getIntersection);
+
     nodeRouter.route('/light')
         .get(lightController.getAll)
         .post(lightController.post)
