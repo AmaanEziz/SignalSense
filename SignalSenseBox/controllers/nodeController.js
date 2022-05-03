@@ -136,7 +136,7 @@ function nodeController(Node) {
     });
   }
 
-  return { getAll, post, remove, patch, getOne, fetchImage, uploadImage, getIntersection, initDatabase };
+  return { getAll, post, remove, patch, getOne, fetchImage, uploadImage, getIntersection };
 
 
 }
