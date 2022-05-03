@@ -122,10 +122,21 @@ function nodeController(Node) {
         return next();
       }
     });
-
+  }
+  
+  function getIntersection(req, res) {
+    const query = 'select intersectionID from Intersection'
+    pool.query(query, null, (error, results) => {
+      if (error) {
+        console.log(error);
+        return res.status(500).json(error);
+      } else {
+        return res.status(200).json(results);
+      }
+    });
   }
 
-  return { getAll, post, remove, patch, getOne, fetchImage, uploadImage };
+  return { getAll, post, remove, patch, getOne, fetchImage, uploadImage, getIntersection };
 
 
 }

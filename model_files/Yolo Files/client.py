@@ -41,6 +41,43 @@ def postNewNode(loc: string = "Location", intersection_id: string='0000', ip: st
         return status, newNodeData
 
 # Purpose: 
+#   Retrieve the intersection ID from the database.
+#
+# Error Handling: 
+#   An unsuccessfull HTTP return code, request timeout, or connection error
+#   will trigger an exception.
+#
+# Return: 
+#   A staus code and dictionary object.
+def getIntersectionID():
+    status = 0
+    intersectionID = None
+    serverName = 'http://localhost:3000/api/node/intersection'
+
+    try:
+        # Send the request
+        r = requests.get(serverName)
+
+        # filter the intersection ID
+        intersectionID = json.loads(r.text)
+        intersectionID = intersectionID[0]
+        intersectionID = intersectionID['intersectionID']
+        
+        r.raise_for_status()
+        status = 1
+    except requests.HTTPError as err:
+        print(err)
+        status = 0
+    except requests.Timeout as err:
+        print(err)
+        status = 0
+    except requests.ConnectionError as err:
+        print(err)
+        status = 0
+    finally:
+        return status, intersectionID
+
+# Purpose: 
 #   Updates a node's meta data on the database.
 #
 # Error Handling: 
