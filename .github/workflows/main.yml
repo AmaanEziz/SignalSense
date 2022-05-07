@@ -18,4 +18,4 @@ jobs:
           known_hosts: ${{ secrets.KNOWN_HOSTS }}
       - name: rsync over ssh
         run: |
-          ssh deployer@ec2-54-153-46-73.us-west-1.compute.amazonaws.com " ./deploy"
+          ssh deployer@ec2-54-183-188-143.us-west-1.compute.amazonaws.com " ./deploy"
