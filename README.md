@@ -4,6 +4,7 @@
 
 - [Description](#description)
 - [Installation](#installation)
+  - [Important Note](#important-note)
   - [Deploying Front End](#deploying-front-end)
   - [Database Setup](#database-setup)
   - [Machine Learning Model Installation](#machine-learning-model-installation)
@@ -18,7 +19,23 @@ This was done by training a machine learning model to detect traffic lights from
 We also developed a website for displaying the active lights for users to see visually rather than just the string of bytes that are transmitted.
 The transmitted data follows the NTCIP format so that it should be indistinguishable from other traffic light systems that are already being used in several areas.
 
+This project repository contains all four parts of the project, detailed below.
+
+|   Component    |                                Purpose                                |
+|:--------------:|:---------------------------------------------------------------------:|
+| SignalSenseBox |                   The service that Nodes connect to                   |
+|       UI       | This is the demo UI for [signalsense.link](https://signalsense.link/) |
+|  AWS Service   |                  This is the centralized AWS service                  |
+|    database    |       This is the database that runs on AWS and SignalSenseBox        |
+
 ## Installation
+
+### Important Note
+
+Both SignalSenseBox and backend require environmental variables to deploy the services.
+These are stored in a .env file that is not included in this repo for security concerns as requested by our client.
+To obtain the .env file, please contact [Harsh Verma](mailto:harsh@glocol.net).
+Once obtained, save the file to `SignalSenseBox/.env` and `backend/.env` respectively.
 
 ### Deploying Front End
 
@@ -39,9 +56,15 @@ The trained model is stored in the `model_files/Yolo Files/exp4/weights/best.pt`
 
 ## Contributors
 
-| Jose Ramirez | Michael Ingrum | Alec Resha | Justin Henley | Chloe Hendrix    | Lan Nguyen | Dang Hoang |
-| :----------: | :------------: | :--------: | :-----------: | :--------------: | :--------: | :--------: |
-| Team Lead    | Backend        | AI/ML      | Databases     | API/Connectivity | Front End  | Front End  |
+|      Name      |  Area of Focus   |
+|:--------------:|:----------------:|
+|  Jose Ramirez  |    Team Lead     |
+| Michael Ingrum |   Backend Dev    |
+|   Alec Resha   |      AI/ML       |
+| Chloe Hendrix  | API/Connectivity |
+| Justin Henley  |  Databases Dev   |
+|   Lan Nguyen   |  Front End Dev   |
+|   Dang Hoang   |  Front End Dev   |
 
 ## Documentation
 
