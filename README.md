@@ -56,15 +56,15 @@ The trained model is stored in the `model_files/Yolo Files/exp4/weights/best.pt`
 
 ## Contributors
 
-|      Name      |  Area of Focus   |
-|:--------------:|:----------------:|
-|  Jose Ramirez  |    Team Lead     |
-| Michael Ingrum |   Backend Dev    |
-|   Alec Resha   |      AI/ML       |
-| Chloe Hendrix  | API/Connectivity |
-| Justin Henley  |  Databases Dev   |
-|   Lan Nguyen   |  Front End Dev   |
-|   Dang Hoang   |  Front End Dev   |
+|      Name      |        Area of Focus        |
+|:--------------:|:---------------------------:|
+|  Jose Ramirez  |  Team Lead, On-Device Code  |
+| Michael Ingrum | Backend Dev, On-Device Code |
+|   Alec Resha   |    AI/ML, Data Pipeline     |
+| Chloe Hendrix  |      API/Connectivity       |
+| Justin Henley  |        Databases Dev        |
+|   Lan Nguyen   |        Front End Dev        |
+|   Dang Hoang   |        Front End Dev        |
 
 ## Documentation
 
