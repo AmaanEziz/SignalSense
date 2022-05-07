@@ -12,18 +12,13 @@
 
 ## Description
 
-***
-
 The purpose of this project is to create a flexible, non-invasive way of getting the current traffic light statuses of intersections.
 This would allow further connectivity in future plans for smart cities, as well as be beneficial for self-driving cards and other autonomous vehicles.
 This was done by training a machine learning model to detect traffic lights from a video feed in near real-time, and then sending the detected traffic light statuses to a server.
 We also developed a website for displaying the active lights for users to see visually rather than just the string of bytes that are transmitted.
 The transmitted data follows the NTCIP format so that it should be indistinguishable from other traffic light systems that are already being used in several areas.
 
-
 ## Installation
-
-***
 
 ### Deploying Front End
 
@@ -44,15 +39,11 @@ The trained model is stored in the `model_files/Yolo Files/exp4/weights/best.pt`
 
 ## Contributors
 
-***
-
 | Jose Ramirez | Michael Ingrum | Alec Resha | Justin Henley | Chloe Hendrix    | Lan Nguyen | Dang Hoang |
 | :----------: | :------------: | :--------: | :-----------: | :--------------: | :--------: | :--------: |
 | Team Lead    | Backend        | AI/ML      | Databases     | API/Connectivity | Front End  | Front End  |
 
 ## Documentation
-
-***
 
 <!---# TODO Add additional documentation if needed -->
 [User Guide](user_guide.pdf) - Instructions on how to run the model and how to use the website.
