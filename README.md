@@ -34,7 +34,7 @@ This project repository contains all four parts of the project, detailed below.
 
 Both SignalSenseBox and backend require environmental variables to deploy the services.
 These are stored in a .env file that is not included in this repo for security concerns as requested by our client.
-To obtain the .env file, please contact [Harsh Verma](mailto:harsh@glocol.net).
+To obtain the .env file, please contact Harsh Verma [harsh@glocol.net](mailto:harsh@glocol.net).
 Once obtained, save the file to `SignalSenseBox/.env` and `backend/.env` respectively.
 
 ### Deploying Front End
