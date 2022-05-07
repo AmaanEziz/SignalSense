@@ -1,5 +1,7 @@
 <h1>Phase-Sense</h1>
 
+<img src="pineapple_logo.png" alt="Team Pineapple Logo" width="150"/>
+
 <h2>Table of Contents:</h2>
 
 - [Description](#description)
@@ -7,7 +9,7 @@
   - [Important Note](#important-note)
   - [Deploying Front End](#deploying-front-end)
   - [Database Setup](#database-setup)
-  - [Machine Learning Model Installation](#machine-learning-model-installation)
+  - [Node Setup](#node-setup)
   - [Signal Sense Box](#signal-sense-box)
 - [Contributors](#contributors)
 - [Documentation](#documentation)
@@ -27,7 +29,7 @@ This project repository contains all four parts of the project, detailed below.
 | SignalSenseBox |                   The service that Nodes connect to                   |
 |       UI       | This is the demo UI for [signalsense.link](https://signalsense.link/) |
 |  AWS Service   |                  This is the centralized AWS service                  |
-|    database    |       This is the database that runs on AWS and SignalSenseBox        |
+|    Database    |       This is the database that runs on AWS and SignalSenseBox        |
 
 ## Installation
 
@@ -42,7 +44,7 @@ Once obtained, save the file to `SignalSenseBox/.env` and `backend/.env` respect
 
 ### Database Setup
 
-### Machine Learning Model Installation
+### Node Setup
 
 1. Clone the repository
 2. Navigate to `Phase-Sense/model_files/Yolo Files/`
@@ -54,6 +56,15 @@ The model should now be fully set up and ready for detection.
 Please refer to the [User Guide](user_guide.pdf) for more information on running detection with preconfigured scripts, or [https://github.com/ultralytics/yolov5](https://github.com/ultralytics/yolov5) for more information on the model itself.
 
 The trained model is stored in the `model_files/Yolo Files/exp4/weights/best.pt` file.
+
+To run the node, follow the additional steps below.
+
+1. Naviage to the `Phase-Sense/model_files/Yolo Files/` directory.
+2. Configure the `test_model.py` file as described in the [User Guide](user_guide.pdf).
+3. Edit the `data_transform.py` file as needed (only needed if locations of ML model output are changed).
+4. Open a terminal and run `python test_model.py` to begin detection.
+5. In a separate terminal, run `python data_transform.py` to begin sending the detections to the database.
+   1. The data pipeline takes the most recent files from the ML model output, so timing for running this is not important as long as the model has at least 5 frames detected.
 
 ### Signal Sense Box
 
