@@ -8,6 +8,7 @@
   - [Deploying Front End](#deploying-front-end)
   - [Database Setup](#database-setup)
   - [Machine Learning Model Installation](#machine-learning-model-installation)
+  - [Signal Sense Box](#signal-sense-box)
 - [Contributors](#contributors)
 - [Documentation](#documentation)
 
@@ -53,6 +54,35 @@ The model should now be fully set up and ready for detection.
 Please refer to the [User Guide](user_guide.pdf) for more information on running detection with preconfigured scripts, or [https://github.com/ultralytics/yolov5](https://github.com/ultralytics/yolov5) for more information on the model itself.
 
 The trained model is stored in the `model_files/Yolo Files/exp4/weights/best.pt` file.
+
+### Signal Sense Box
+
+For additional information on the docker image, please see the [SignalSenseBox](SignalSenseBox/) directory.
+
+Each SignalSenseBox pulls down a prebuilt database from Docker.
+To rebuild you must first have Docker Desktop installed on your PC.
+Make sure to login by running Docker login from a terminal.
+In that same terminal run the following command: `docker buildx build --platform linux/arm64/v8,linux/amd64 -t <Your Docker Username>/signal-db:latest --push .` from the `database\dockerImage` directory.
+The scripts under `sql-scripts/` and the `my.cnf` file will be used to create the image, and the user and schema is created when the image is pulled onto the new SignalSenseBox.
+These attributes are provided in the SignalSenseBox `.env` file.
+After pushing the new version be sure to update the [SignalSenseBox/docker-compose.yaml](https://github.com/PhaseSense/Phase-Sense/blob/main/SignalSenseBox/docker-compose.yaml) file so that the new database is pulled.
+
+```yaml
+services: 
+  mysqldb:
+    image: <Your repo name>/signal-db:latest # <- update database image tag here
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    pull_policy: always
+    environment:
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+      MYSQL_USER: $MYSQL_USER
+      MYSQL_PASSWORD: $MYSQL_PASS
+    ports:
+      - $MYSQL_DOCKER_PORT:3306
+    cap_add:
+      - SYS_NICE  # CAP_SYS_NICE
+```
 
 ## Contributors
 
