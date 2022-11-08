@@ -50,7 +50,7 @@ sock.on('message',function(msg,info){
 
 const pool2 = require('./dbconfig');
 // Send a signal every 90 milliseconds
-setInterval(()=>{
+/*setInterval(()=>{
   // if this is ran on a Signal sense box, there should only exist
   // one intersection ID 
   const intersection_id = 'select intersectionID from Intersection';
@@ -79,9 +79,9 @@ setInterval(()=>{
     }
   });
 }, 100);
-
-//Update server
-
+*/
+//Update server-- Commented out to discount signal box from AWS temporarily ... will be commented back in later
+/*
 const https = require('https');
 
 var query = 'call get_all_data()';             
@@ -122,3 +122,4 @@ setInterval(() => {
 
   });
 }, 5000); //every 500 seconds, for testing
+*/
