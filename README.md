@@ -1,5 +1,5 @@
 <h1>Phase-Sense</h1>
-
+<img source="static_startup_logo.png">
 
 
 <h2>Table of Contents:</h2>
