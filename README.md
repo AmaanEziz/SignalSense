@@ -111,5 +111,5 @@ To run the node, follow the additional steps below.
 ## Documentation
 
 <!---# TODO Add additional documentation if needed -->
-[User Guide](user_guide.pdf) - Instructions on how to run the model and how to use the website.
-[Maintenance Manual](maintenance_manual.pdf) - Instructions on how to maintain the project.
+[<a href="https://drive.google.com/file/d/1ejSIhz6rluYjG7UiNGEMwV9UadcDnziR/view?usp=sharing"> User Guide </a>](user_guide.pdf) - Instructions on how to run the model and how to use the website.
+[<a href="https://drive.google.com/file/d/1iCu3uLODQg9G2kiL64HM1gIbtMjdTzzR/view?usp=sharing"> User Guide </a>](maintenance_manual.pdf) - Instructions on how to maintain the project.
