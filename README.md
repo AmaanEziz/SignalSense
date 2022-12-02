@@ -98,7 +98,7 @@ To run the node, follow the additional steps below.
 
 |      Name      |        Area of Focus        |
 |:--------------:|:---------------------------:|
-|  Jose Ramirez  |  Team Lead, On-Device Code  |
+|  Mindy Cha     |  Team Lead, On-Device Code  |
 | Michael Ingrum | Backend Dev, On-Device Code |
 |   Alec Resha   |    AI/ML, Data Pipeline     |
 | Chloe Hendrix  |      API/Connectivity       |
