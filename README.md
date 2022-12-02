@@ -1,12 +1,12 @@
 <h1>Phase-Sense</h1>
 
-<img src="pineapple_logo.png" alt="Team Pineapple Logo" width="150"/>
+
 
 <h2>Table of Contents:</h2>
 
 - [Description](#description)
 - [Installation](#installation)
-  - [Important Note](#important-note)
+- [Important Note](#important-note)
   - [Deploying Front End](#deploying-front-end)
   - [Database Setup](#database-setup)
   - [Node Setup](#node-setup)
@@ -16,8 +16,8 @@
 ## Description
 
 The purpose of this project is to create a flexible, non-invasive way of getting the current traffic light statuses of intersections.
-This would allow further connectivity in future plans for smart cities, as well as be beneficial for self-driving cards and other autonomous vehicles.
-This was done by training a machine learning model to detect traffic lights from a video feed in near real-time, and then sending the detected traffic light statuses to a server.
+This would allow further connectivity in future plans for smart cities, as well as be beneficial for self-driving cars and other autonomous vehicles.
+This will be done by training a machine learning model to detect traffic lights from a video feed in near real-time, and then sending the detected traffic light statuses to a server.
 We also developed a website for displaying the active lights for users to see visually rather than just the string of bytes that are transmitted.
 The transmitted data follows the NTCIP format so that it should be indistinguishable from other traffic light systems that are already being used in several areas.
 
@@ -72,7 +72,7 @@ services:
       - SYS_NICE  # CAP_SYS_NICE
 ```
 
-### Node Setup
+ Remove Node Set up Maybe? ### Node Setup
 
 1. Clone the repository
 2. Navigate to `Phase-Sense/model_files/Yolo Files/`
@@ -87,24 +87,26 @@ The trained model is stored in the `model_files/Yolo Files/exp4/weights/best.pt`
 
 To run the node, follow the additional steps below.
 
-1. Naviage to the `Phase-Sense/model_files/Yolo Files/` directory.
+1. Navigate to the `Phase-Sense/model_files/Yolo Files/` directory.
 2. Configure the `test_model.py` file as described in the [User Guide](user_guide.pdf).
 3. Edit the `data_transform.py` file as needed (only needed if locations of ML model output are changed).
 4. Open a terminal and run `python test_model.py` to begin detection.
 5. In a separate terminal, run `python data_transform.py` to begin sending the detections to the database.
-   1. The data pipeline takes the most recent files from the ML model output, so timing for running this is not important as long as the model has at least 5 frames detected.
+   1. The data pipeline takes the most recent files from the ML model output, so timing for running this is not important as long as the model has at least 5 frames detected. 
 
 ## Contributors
 
 |      Name      |        Area of Focus        |
 |:--------------:|:---------------------------:|
-|  Mindy Cha     |  Team Lead, On-Device Code  |
-| Michael Ingrum | Backend Dev, On-Device Code |
-|   Alec Resha   |    AI/ML, Data Pipeline     |
-| Chloe Hendrix  |      API/Connectivity       |
-| Justin Henley  |        Databases Dev        |
-|   Lan Nguyen   |        Front End Dev        |
-|   Dang Hoang   |        Front End Dev        |
+|  Manvir Kaur   |  Team Lead & Hardware Lead |
+|  Mindy Cha     |       AI/ML     |
+|  Jian Chen     |  Hardware    |
+|  Liana Coyle  |       AI/ML Lead    |
+|  Amaan Eziz  | UI/Database Lead |
+|  Anh Phan      | UI/Database |
+|  Luda Solva    |       AI/ML     |
+| Kyle Barreras |  Hardware   |
+
 
 ## Documentation
 
