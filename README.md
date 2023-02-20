@@ -43,6 +43,9 @@ Once obtained, save the file to `SignalSenseBox/.env` and `backend/.env` respect
 
 This service is deployed automatically when a commit is merged to the Phase-Sense repository.
 
+### Running Front End Locally
+Open a terminal. Navigate to UI/src. Verify you have node already installed. Run "npm i" and then "node server.js". Navigate to localhost:3000 on a browser.
+
 ### Database Setup
 
 For additional information on the docker image, please see the [SignalSenseBox](SignalSenseBox/) directory.

@@ -8,7 +8,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.set('view engine', 'ejs');
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000 ;
 app.use("/css", express.static(__dirname + "/css"));
 app.use("/js", express.static(__dirname + "/js"));
 
