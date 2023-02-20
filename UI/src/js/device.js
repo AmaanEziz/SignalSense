@@ -71,7 +71,11 @@ function updateArrowPhase(data) {
 
         var phaseImg = document.createElement("img");
         var phaseImgSource = updatePhaseImg(v);
-        phaseImg.setAttribute("src", phaseImgSource);
+        let UP_ARROW_SRC ="data:image/png;base64,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"
+        phaseImg.setAttribute("src", UP_ARROW_SRC);
+        phaseImg.setAttribute("height", "100px");
+        phaseImg.setAttribute("width", "100px");
+
         colDiv.append(phaseImg);
 
         var rowDiv = document.createElement("div");
