@@ -1,0 +1,15 @@
+# COCO 2017 dataset http://cocodataset.org
+
+# download command/URL (optional)
+download: bash ./scripts/get_coco.sh
+
+# train and val data as 1) directory: path/images/, 2) file: path/images.txt, or 3) list: [path1/images/, path2/images/]
+train: C:\Users\imogs\yolov7\train\images  # 118287 images
+val: .C:\Users\imogs\yolov7\valid\images  # 5000 images
+https://competitions.codalab.org/competitions/20794
+
+# number of classes
+nc: 12
+
+# class names
+names: ['green', 'left-green', 'left-green-and-green', 'left-green-and-right-green', 'left-red', 'left-yellow', 'nolight', 'red', 'right-green', 'right-red', 'right-yellow', 'yellow']
