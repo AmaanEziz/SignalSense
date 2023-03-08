@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 12
+names: ['green', 'left-green', 'left-green-and-green', 'left-green-and-right-green', 'left-red', 'left-yellow', 'nolight', 'red', 'right-green', 'right-red', 'right-yellow', 'yellow']
+
+roboflow:
+  workspace: signal-sense-traffic-signal-detection
+  project: traffic-signals-mcmpm
+  version: 10
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/signal-sense-traffic-signal-detection/traffic-signals-mcmpm/dataset/10
