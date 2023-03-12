@@ -103,7 +103,7 @@ To run the node, follow the additional steps below.
 |:--------------:|:---------------------------:|
 |  Manvir Kaur   |  Team Lead & Hardware Lead |
 |  Mindy Cha     |       AI/ML     |
-|  Jian Chen     |  Hardware    |
+|  Jian Chen     |  UI/Database    |
 |  Liana Coyle  |       AI/ML Lead    |
 |  Amaan Eziz  | UI/Database Lead |
 |  Anh Phan      | UI/Database |
