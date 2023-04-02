@@ -34,19 +34,21 @@ input_image = np.transpose(resized_image, (2, 0, 1))
 results = exec_net.infer(inputs={input_blob: input_image})
 
 # Get the output
+# Get the output
 output = results[output_blob]
-print(output.shape)
 
 # Process the output
 detections = []
-for detection in output:
-    confidence = detection[6]
-    if confidence > 0.99999:
+for i in range(output.shape[1]):
+    detection = output[0, i]
+    confidence = detection[0]
+    if confidence[0][0] > .8:
         # Add the detection to the list of detections
         detections.append(detection)
+        # print(detections)
 
 # Sort the detections by confidence score in descending order
-detections = sorted(detections, key=lambda x: x[5], reverse=True)
+detections = sorted(detections, key=lambda x: x[0][5][0], reverse=True)
 
 # Keep only the top-k detections with the highest confidence scores
 k = 3
@@ -56,20 +58,20 @@ label_path = 'labels.txt'
 label_list = load_labels(label_path)
 
 # Draw bounding boxes around the top-k detections
-for detection in selected_detections:
-
-    class_id = int(detection[5])
+for detection in detections:
+    # print(detections)
+    class_id = int(detection[0][5][0])
     class_id = class_id % len(label_list)
     # print(detection)
 
     print("Class ID:", class_id)
     print("Label list length:", len(label_list))
-    padding = 35
+    #padding = 1000
     #print("Class ID:", class_id)
-    left = int((detection[1] * image.shape[1]/640))
-    top = int(detection[2] * image.shape[0]/640)
-    right = int((detection[3] * image.shape[1]/640))
-    bottom = int((detection[4] * image.shape[0]/640))
+    left = int((detection[0][1][0] * image.shape[1]))
+    top = int((detection[0][2][0] * image.shape[0]))
+    right = int((detection[0][3][0] * image.shape[1]))
+    bottom = int((detection[0][4][0] * image.shape[0]))
     label = label_list[class_id]
 
     cv2.putText(image, label, (left, top - 5),
