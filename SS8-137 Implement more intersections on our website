@@ -1,0 +1,7 @@
+SS8-137 Implement more intersections on our website
+
+
+
+Create separate pages for the added intersections. 
+
+Acceptance Criteria: Each page will consist of the similar information: inferred video/image, NTCIP stream, the phase number, light ID, and state. 
