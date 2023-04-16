@@ -26,7 +26,7 @@ This project repository contains all four parts of the project, detailed below.
 |   Component    |                                Purpose                                |
 |:--------------:|:---------------------------------------------------------------------:|
 | SignalSenseBox |                   The service that Nodes connect to                   |
-|       UI       | This is the demo UI for [signalsense.link](https://signalsense.link/) |
+|       UI       | This is the demo UI for [signalsense.link](http://signalsense.herokuapp.com/) |
 |  AWS Service   |                  This is the centralized AWS service                  |
 |    Database    |       This is the database that runs on AWS and SignalSenseBox        |
 
