@@ -5,7 +5,8 @@ Our model was trained into a PyTorch model, and then converted to an ONNX model.
 - accurate bounding boxes
 - inference speed 
 
-You can find the test images in each format below:
-[<a href=""> Pytorch Model </a>]
-[<a href=""> ONNX Model </a>]
-[<a href=""> IR Model </a>]
+You can find the test images in each format below.
+
+[<a href="https://github.com/AmaanEziz/SignalSense/tree/main/YOLOv7_testOutputs/Test-Images/PyTorch%20Model"> Pytorch Model </a>]
+[<a href="https://github.com/AmaanEziz/SignalSense/tree/main/YOLOv7_testOutputs/Test-Images/ONNX%20Model"> ONNX Model </a>]
+[<a href="https://github.com/AmaanEziz/SignalSense/tree/main/YOLOv7_testOutputs/Test-Images/IR%20Model"> IR Model </a>]
