@@ -37,7 +37,7 @@ describe("Roboflow Infer", function () {
     it("Passes all green light intersection photo detections via URL", function () {
         let ALL_GREEN_URL = `https://www.gannett-cdn.com/presto/2020/08/26/PSPR/0b690531-ac10-4cb0-8ff3-f7b3d455b8da-tGreen_lights00002.jpg?width=660&height=471&fit=crop&format=pjpg&auto=webp`
         roboflow_infer_url(ALL_GREEN_URL).then(ROBOFLOW_ALL_GREEN_RESPONSE => {
-            expect(ROBOFLOW_ALL_GREEN_RESPONSE.pGREENictions[0].class).to.equal("green");
+            expect(ROBOFLOW_ALL_GREEN_RESPONSE.predictions[0].class).to.equal("green");
             expect(ROBOFLOW_ALL_GREEN_RESPONSE.predictions[1].class).to.equal("green");
 
         });
@@ -47,10 +47,10 @@ describe("Roboflow Infer", function () {
         let ALL_YELLOW_URL = `https://www.pressenterprise.com/wp-content/uploads/migration/n22/n22p6k-syellowlight0610afdbbinary1054348.jpg?w=978`
         roboflow_infer_url(ALL_YELLOW_URL).then(ROBOFLOW_ALL_YELLOW_RESPONSE => {
             console.log(ROBOFLOW_ALL_YELLOW_RESPONSE)
-            expect(ROBOFLOW_ALL_YELLOW_RESPONSE.pyellowictions[0].class).to.equal("yellow");
-            expect(ROBOFLOW_ALL_YELLOW_RESPONSE.pyellowictions[1].class).to.equal("yellow");
-            expect(ROBOFLOW_ALL_YELLOW_RESPONSE.pyellowictions[2].class).to.equal("left-yellow");
-            expect(ROBOFLOW_ALL_YELLOW_RESPONSE.pyellowictions[3].class).to.equal("left-yellow");
+            expect(ROBOFLOW_ALL_YELLOW_RESPONSE.predictions[0].class).to.equal("yellow");
+            expect(ROBOFLOW_ALL_YELLOW_RESPONSE.predictions[1].class).to.equal("yellow");
+            expect(ROBOFLOW_ALL_YELLOW_RESPONSE.predictions[2].class).to.equal("left-yellow");
+            expect(ROBOFLOW_ALL_YELLOW_RESPONSE.predictions[3].class).to.equal("left-yellow");
 
         });
 
