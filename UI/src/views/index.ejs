@@ -341,7 +341,6 @@ var infer = function() {
 
        document.cookie ="url="+settings.url
 
-		document.cookie="format"+settings.format
 
 		$.ajax(settings).fail(() => {
 			$("#output").html("Inference failed. Please ensure a valid photo URL is inputted.")
@@ -541,7 +540,7 @@ var getBase64fromFile = function(file) {
             <div class="text-center mt-5">
                 <h1>Welcome</h1>
                 <h2>View Detection Running On An Intersection</h2>
-                <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" id="device-option" onchange="saveSelectedValue()">
+                <select  class="form-select form-select-lg mb-3" aria-label=".form-select-lg example" id="device-option" onchange="saveSelectedValue()">
                     <form action="device.html" >
                     <option value="0">Select Devices</option>
                     </form>

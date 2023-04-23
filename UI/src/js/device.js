@@ -11,9 +11,26 @@ var isTemple = deviceId == "Temple"
 
 var isAllRed = (isStateUni || isHeritageHill|| isPowerInnRoad)
 var intersectionID = '';
+function getCookie(cname) {
+    let name = cname + "=";
+    let decodedCookie = decodeURIComponent(document.cookie);
+    let ca = decodedCookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+        let c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(name) == 0) {
+            return c.substring(name.length, c.length);
+        }
+    }
+    return "";
+}
+$deviceLocation.text(getCookie("intersection"));
+console.log(getCookie("intersection"))
+
 $.getJSON(`https://signalsense.link/api/node/?nodeId=${stateUniNodeId}`, function(data){
     $.each(data, function(){
-        $deviceLocation.text(`${this.nodeDescription}`);
         intersectionID = this.intersectionID;
         $.getJSON(`https://signalsense.link/api/intersection/stream?intersectionID=${intersectionID}`, function(data){
             $.each(data, function(){
