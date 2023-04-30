@@ -14,15 +14,15 @@ from utils.general import increment_path
 from array import array
 import openpyxl #needed for excel data write
 
-#needed for excel data write
-workbook_name = "C:/Users/mindy/yolov7env/Scripts/yolov7/data.xlsx"
+#Opens existing excel file
+workbook_name = "../yolov7/data.xml" #replace with path to excel file
 wb = openpyxl.load_workbook(workbook_name)
 ws = wb['Sheet1']
 ws = wb.active
 new_data = []
 
 cuda = True
-w = "C:/Users/mindy/yolov7env/Scripts/yolov7/best.onnx" #replace with path to model file
+w = "../best.onnx" #replace with path to model file
 
 providers = ['CUDAExecutionProvider', 'CPUExecutionProvider'] if cuda else ['CPUExecutionProvider']
 session = ort.InferenceSession(w, providers=providers)
@@ -66,6 +66,7 @@ name_colors = {
     'yellow': [255, 255, 0]
 }
 
+# Define name-bits dictionary
 name_bits = {
     'green': 0x00000001,
     'left-green': 0x00000010,
@@ -77,8 +78,8 @@ name_bits = {
 
 
 # Set the path to the directory containing the images to be processed
-image_dir = "C:/Users/mindy/yolov7env/Scripts/yolov7/inference/images" #replace with path to test images
-parent_dir = Path("C:/Users/mindy/yolov7env/Scripts/yolov7/runs/detect")
+image_dir = "../yolov7/inference/images" #replace with path to test images
+parent_dir = Path("../yolov7/runs/detect") #replace with path to yolov7/runs/detect directory
 
 # Define the base name of the directory
 base_name = 'exp'
@@ -171,7 +172,7 @@ for filename in os.listdir(image_dir):
         Image.fromarray(ori_images[0]).save(output_filename)
         print(f" The image with the result is saved in: {new_dir}")
 
-#needed for excel data write
+#Write to existing excel file
     for info in new_data:
         ws.append(info)
 
