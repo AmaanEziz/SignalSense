@@ -14,13 +14,13 @@
 
 - [Installation](#installation) 
 
-    [Deploying Front End](#deploying-front-end) 
+    -[Deploying Front End](#deploying-front-end) 
 
-    [Running Front End Locally](#running-front-end-locally)  
+    -[Running Front End Locally](#running-front-end-locally)  
 
-    [Running the PyTorch/ONNX Model](#running-the-pyTorch/ONNX-Model) 
+    -[Running the PyTorch/ONNX Model](#running-the-pyTorch/ONNX-Model) 
 
-    [Running the IR Model](#running-the-ir-model) 
+    -[Running the IR Model](#running-the-ir-model) 
 
 - [Contributors](#contributors) 
 
