@@ -136,21 +136,21 @@ The trained model (.xml and .bin) is stored in the https://drive.google.com/driv
 
 |:--------------:|:---------------------------:| 
 
-|  Manvir Kaur   |  Team Lead & AI/ML | 
+|  Manvir Kaur   |     Team Lead & AI/ML       | 
 
-|  Mindy Cha     |       AI/ML     | 
+|  Mindy Cha     |           AI/ML             | 
 
-|  Jian Chen     |  UI  | 
+|  Jian Chen     |            UI               | 
 
-|  Liana Coyle  |       AI/ML    | 
+|  Liana Coyle   |           AI/ML             | 
 
-|  Amaan Eziz  | UI| 
+|  Amaan Eziz    |            UI               | 
 
-|  Anh Duy Phan      | UI | 
+|  Anh Duy Phan  |            UI               | 
 
-|  Luda Salova    |       AI/ML     | 
+|  Luda Salova   |           AI/ML             | 
 
-| Kyle Barreras |  AI/ML   | 
+| Kyle Barreras  |           AI/ML             |  
 
   
 
