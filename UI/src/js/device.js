@@ -29,18 +29,6 @@ function getCookie(cname) {
 $deviceLocation.text(getCookie("intersection"));
 console.log(getCookie("intersection"))
 
-$.getJSON(`https://signalsense.link/api/node/?nodeId=${stateUniNodeId}`, function(data){
-    $.each(data, function(){
-        intersectionID = this.intersectionID;
-        $.getJSON(`https://signalsense.link/api/intersection/stream?intersectionID=${intersectionID}`, function(data){
-            $.each(data, function(){
-                var d = JSON.stringify(this)
-                $streamText.text(`${d}`);
-            });
-        });
-    });
-});
-
 
 $.getJSON(`https://signalsense.link/api/node/light?nodeId=${stateUniNodeId}` , function(data) {
     var tbl_body = document.createElement("tbody");
@@ -81,15 +69,22 @@ $.getJSON(`https://signalsense.link/api/node/light?nodeId=${stateUniNodeId}` , f
 if (deviceId == stateUniNodeId) {
     var imageSrc = `https://signalsense.link/api/node/getImage?nodeId=${deviceId}`;
     $('#intersection-img').attr("src", imageSrc);
+    $streamText.text(`0x000000400x000000040x00000004`);
+
 }
 if (deviceId == 'HeritageHill') {
     $('#intersection-img').attr("src", "https://i.ibb.co/jV9g8mc/Heritage-Hill.jpg");
+    $streamText.text(`0x000000400x000000040x00000004`);
+
 }
 if (deviceId == "PowerInnRoad") {
     $('#intersection-img').attr("src", "https://i.ibb.co/0DYCjbC/Power-Inn-Road.jpg");
+    $streamText.text(`0x000000400x000000040x00000004`);
+
 }
 if (deviceId == "Temple") {
     $('#intersection-img').attr("src", "https://i.ibb.co/nQJrSvp/Temple.jpg");
+    $streamText.text(`0x000000010x00000001`);
 
 }
 deviceId = stateUniNodeId;
@@ -235,9 +230,7 @@ $selRow.text(selectedRow);
 }
 console.log("is temple? "+isTemple)
 if (isTemple) {
-    console.log($("#light-table tbody tr"))
     $("#light-table tbody tr").each((index, tr) => {
-        console.log(tr)
         if (index == 2) {
             $(tr).remove()
         }
