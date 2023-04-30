@@ -1,119 +1,185 @@
-<h1>Phase-Sense</h1>
-<img src="static_startup_logo.png" alt="Team Static Startup Logo" width="150"/>
+<h1>Signal-Sense</h1> 
 
+<img src="static_startup_logo.png" alt="Team Static Startup Logo" width="150"/> 
 
-<h2>Table of Contents:</h2>
+  
 
-- [Description](#description)
-- [Installation](#installation)
-- [Important Note](#important-note)
-  - [Deploying Front End](#deploying-front-end)
-  - [Database Setup](#database-setup)
-  - [Node Setup](#node-setup)
-- [Contributors](#contributors)
-- [Documentation](#documentation)
+<h2>Table of Contents:</h2> 
 
-## Description
+  
 
-The purpose of this project is to create a flexible, non-invasive way of getting the current traffic light statuses of intersections.
-This would allow further connectivity in future plans for smart cities, as well as be beneficial for self-driving cars and other autonomous vehicles.
-This will be done by training a machine learning model to detect traffic lights from a video feed in near real-time, and then sending the detected traffic light statuses to a server.
-We also developed a website for displaying the active lights for users to see visually rather than just the string of bytes that are transmitted.
-The transmitted data follows the NTCIP format so that it should be indistinguishable from other traffic light systems that are already being used in several areas.
+- [Description](#description) 
 
-This project repository contains all four parts of the project, detailed below.
+- [Testing](#testing) 
 
-|   Component    |                                Purpose                                |
-|:--------------:|:---------------------------------------------------------------------:|
-| SignalSenseBox |                   The service that Nodes connect to                   |
-|       UI       | This is the demo UI for [signalsense.link](http://signalsense.herokuapp.com/) |
-|  AWS Service   |                  This is the centralized AWS service                  |
-|    Database    |       This is the database that runs on AWS and SignalSenseBox        |
+- [Installation](#installation) 
 
-## Installation
+    [Deploying Front End](#deploying-front-end) 
 
-### Important Note
+    [Running Front End Locally](#running-front-end-locally)  
 
-Both SignalSenseBox and backend require environmental variables to deploy the services.
-These are stored in a .env file that is not included in this repo for security concerns as requested by our client.
-To obtain the .env file, please contact Harsh Verma [harsh@glocol.net](mailto:harsh@glocol.net).
-Once obtained, save the file to `SignalSenseBox/.env` and `backend/.env` respectively.
+    [Running the PyTorch/ONNX Model](#running-the-pyTorch/ONNX-Model) 
 
-### Deploying Front End
+    [Running the IR Model](#running-the-ir-model) 
 
-This service is deployed automatically when a commit is merged to the Phase-Sense repository.
+- [Contributors](#contributors) 
 
-### Running Front End Locally
-Open a terminal. Navigate to UI/src. Verify you have node already installed. Run "npm i" and then "node server.js". Navigate to localhost:3000 on a browser.
+- [Documentation](#documentation) 
 
-### Database Setup
+  
 
-For additional information on the docker image, please see the [SignalSenseBox](SignalSenseBox/) directory.
+## Description 
 
-Each SignalSenseBox pulls down a prebuilt database from Docker.
-To rebuild you must first have Docker Desktop installed on your PC.
-Make sure to login by running Docker login from a terminal.
-In that same terminal run the following command: `docker buildx build --platform linux/arm64/v8,linux/amd64 -t <Your Docker Username>/signal-db:latest --push .` from the `database\dockerImage` directory.
-The scripts under `sql-scripts/` and the `my.cnf` file will be used to create the image, and the user and schema is created when the image is pulled onto the new SignalSenseBox.
-These attributes are provided in the SignalSenseBox `.env` file.
-After pushing the new version be sure to update the [SignalSenseBox/docker-compose.yaml](https://github.com/PhaseSense/Phase-Sense/blob/main/SignalSenseBox/docker-compose.yaml) file so that the new database is pulled.
+This project was offeered to us by Dr. Harsh Verma of Glocol Networks. Glocol Networks is an Internet-of-Things (IoT) start-up with a mission of transforming how IOT, Smart Objects, and Wearables can change our lives in Smart Cities with a new paradigm to smart living and saving lives.  
 
-```yaml
-services: 
-  mysqldb:
-    image: <Your repo name>/signal-db:latest # <- update database image tag here
-    command: --default-authentication-plugin=mysql_native_password
-    restart: always
-    pull_policy: always
-    environment:
-      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
-      MYSQL_USER: $MYSQL_USER
-      MYSQL_PASSWORD: $MYSQL_PASS
-    ports:
-      - $MYSQL_DOCKER_PORT:3306
-    cap_add:
-      - SYS_NICE  # CAP_SYS_NICE
-```
+The purpose of this project is to create a flexible, non-invasive way of getting the current traffic light statuses of intersections. 
 
- Remove Node Set up Maybe? ### Node Setup
+This would allow further connectivity in future plans for smart cities, as well as be beneficial for self-driving cars and other autonomous vehicles. 
 
-1. Clone the repository
-2. Navigate to `Phase-Sense/model_files/Yolo Files/`
-3. Run `git clone https://github.com/ultralytics/yolov5` to install the ML model
-4. Run `pip install -r requirements.txt` to install the required packages, followed by `pip install -r yolov5/requirements.txt` to install any updated model requirements
+This will be done by developing an AI/ML model using Intel OpenVINO as a Visual Approach for capturing Signal Change information at Traffic Intersections without interfering or touching the Traffic Controller. We are using Roboflow to train our model. 
 
-<!--- # TODO Fix link to user guide when it is complete and in the repo. -->
-The model should now be fully set up and ready for detection.
-Please refer to the [User Guide](user_guide.pdf) for more information on running detection with preconfigured scripts, or [https://github.com/ultralytics/yolov5](https://github.com/ultralytics/yolov5) for more information on the model itself.
+We also developed a website for displaying the change of traffic signal phases.  
 
-The trained model is stored in the `model_files/Yolo Files/exp4/weights/best.pt` file.
+ 
 
-To run the node, follow the additional steps below.
+### Testing 
 
-1. Navigate to the `Phase-Sense/model_files/Yolo Files/` directory.
-2. Configure the `test_model.py` file as described in the [User Guide](user_guide.pdf).
-3. Edit the `data_transform.py` file as needed (only needed if locations of ML model output are changed).
-4. Open a terminal and run `python test_model.py` to begin detection.
-5. In a separate terminal, run `python data_transform.py` to begin sending the detections to the database.
-   1. The data pipeline takes the most recent files from the ML model output, so timing for running this is not important as long as the model has at least 5 frames detected. 
+To test the developed model, navigate to the URL here and choose either the URL or file upload methods. Then ensure the Labels section has “On” selected. Ensure the inference result section has “Image” selected and click “Run Inference” once a valid photo URL or photo image has been uploaded. 
 
-## Contributors
+ 
 
-|      Name      |        Area of Focus        |
-|:--------------:|:---------------------------:|
-|  Manvir Kaur   |  Team Lead & Hardware Lead |
-|  Mindy Cha     |       AI/ML     |
-|  Jian Chen     |  UI/Database    |
-|  Liana Coyle  |       AI/ML Lead    |
-|  Amaan Eziz  | UI/Database Lead |
-|  Anh Phan      | UI/Database |
-|  Luda Solva    |       AI/ML     |
-| Kyle Barreras |  Hardware   |
+To test the model locally, follow the instructions given in the <a href=””> Maintenance Manual</a> to download all necessary files. Then, follow the instructions in the <a href=””>System Test Report</a> to set up the test environment.  
 
+ 
 
-## Documentation
+To test the model on Google Colab/Jupyter Notebook, follow the instructions in the <a href=””>System Test Report</a> to set up the test environment. 
 
-<!---# TODO Add additional documentation if needed -->
-[<a href="https://drive.google.com/file/d/1ejSIhz6rluYjG7UiNGEMwV9UadcDnziR/view?usp=sharing"> User Guide </a>](user_guide.pdf) - Instructions on how to run the model and how to use the website.
+ 
 
-[<a href="https://drive.google.com/file/d/1iCu3uLODQg9G2kiL64HM1gIbtMjdTzzR/view?usp=sharing"> Maintenance Manual </a>](maintenance_manual.pdf) - Instructions on how to maintain the project.
+## Installation 
+
+   
+
+### Deploying Front End 
+
+  
+
+This service is deployed automatically when a commit is merged to the Signal-Sense repository. 
+
+  
+
+### Running Front End Locally 
+
+Open a terminal. Navigate to UI/src. Verify you have node already installed. Run "npm i" and then "node server.js". Navigate to localhost:3000 on a browser. 
+
+ 
+
+### Running the PyTorch/ONNX Model 
+
+1. Run ‘python -m venv yolov7env’ to create a virtual environment 
+
+2. Navigate to yolov7env/Scripts and run ‘activate’ 
+
+3. Run `git clone https://github.com/AmaanEziz/SignalSense` to install the model files 
+
+4. Navigate to yolov7 
+
+5. Run `pip install -r requirements.txt` to install the required packages 
+
+6. Run ‘python detect.py --weights best.pt --conf 0.4 --img-size 640 –source ./inference/images’ to run the inference using the PyTorch model.  
+
+7. Run ‘python detect-ONNX.py’ to run the inference using the ONNX model 
+
+  
+
+<!--- # TODO Fix link to user guide when it is complete and in the repo. --> 
+
+The model should now be fully set up and ready for detection. 
+
+Please refer to the [User Guide](user_guide.pdf) for more information on running detection with preconfigured scripts, or [https://github.com/WongKinYiu/yolov7](https://github.com/WongKinYiu/yolov7) for more information on the model itself. 
+
+The trained model (.pt and .onnx) is stored in the https://drive.google.com/drive/folders/12Hpy5GGVG6ktBY3NA8FjU4FjZliUXtok?usp=share_link  
+
+ 
+
+### Running the IR Model 
+
+1. Go to Download Intel® Distribution of OpenVINO™ Toolkit 
+
+2. Choose ‘Runtime’, your OS type, version ‘2022.3’, distribution ‘PIP’ and follow the installation guide given on the page 
+
+*Suggested to use Python version 3.9 
+
+2. Navigate to openvino_env 
+
+3. Download ‘IRscript.py’ from this repository, the trained model from the google drive, and place in openvino_env directory 
+
+4. Create a text file named `class_labels.txt` 
+
+5. Navigate to openvino_env/images and place the image(s) you want to run inference on 
+
+5. Run `python IRscript.py` to run inference 
+
+ 
+
+Please refer to the [User Guide](user_guide.pdf) for more information on running detection with preconfigured scripts 
+
+The trained model (.xml and .bin) is stored in the https://drive.google.com/drive/folders/1NQ2DdxkQuzjxjA4i1zIZEQszl-OMXn-5?usp=share_link 
+
+ 
+
+## Contributors 
+
+  
+
+|      Name      |        Area of Focus        | 
+
+|:--------------:|:---------------------------:| 
+
+|  Manvir Kaur   |  Team Lead & AI/ML | 
+
+|  Mindy Cha     |       AI/ML     | 
+
+|  Jian Chen     |  UI  | 
+
+|  Liana Coyle  |       AI/ML    | 
+
+|  Amaan Eziz  | UI| 
+
+|  Anh Duy Phan      | UI | 
+
+|  Luda Salova    |       AI/ML     | 
+
+| Kyle Barreras |  AI/ML   | 
+
+  
+
+  
+
+## Documentation 
+
+  
+
+<!---# TODO Add additional documentation if needed --> 
+
+ 
+
+User Manual (Work is in progress for the documentation! Links will be updated soon!): Instructions on how to run the model and how to use the website. 
+
+ 
+
+Maintenance Manual (Work is in progress for the documentation! Links will be updated soon!): Instructions on how to maintain the project. 
+
+ 
+
+ 
+
+ 
+
+ 
+
+[<a href="https://drive.google.com/file/d/1ejSIhz6rluYjG7UiNGEMwV9UadcDnziR/view?usp=sharing"> User Guide </a>](user_guide.pdf) - Instructions on how to run the model and how to use the website. 
+
+  
+
+[<a href="https://drive.google.com/file/d/1iCu3uLODQg9G2kiL64HM1gIbtMjdTzzR/view?usp=sharing"> Maintenance Manual </a>](maintenance_manual.pdf) - Instructions on how to maintain the project. 
