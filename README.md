@@ -14,13 +14,13 @@
 
 - [Installation](#installation) 
 
-    -[Deploying Front End](#deploying-front-end) 
+    - [Deploying Front End](#deploying-front-end) 
 
-    -[Running Front End Locally](#running-front-end-locally)  
+    - [Running Front End Locally](#running-front-end-locally)  
 
-    -[Running the PyTorch/ONNX Model](#running-the-pyTorch/ONNX-Model) 
+    - [Running the PyTorch/ONNX Model](#running-the-pyTorch/ONNX-Model) 
 
-    -[Running the IR Model](#running-the-ir-model) 
+    -  [Running the IR Model](#running-the-ir-model) 
 
 - [Contributors](#contributors) 
 
@@ -175,11 +175,3 @@ Maintenance Manual (Work is in progress for the documentation! Links will be upd
  
 
  
-
- 
-
-[<a href="https://drive.google.com/file/d/1ejSIhz6rluYjG7UiNGEMwV9UadcDnziR/view?usp=sharing"> User Guide </a>](user_guide.pdf) - Instructions on how to run the model and how to use the website. 
-
-  
-
-[<a href="https://drive.google.com/file/d/1iCu3uLODQg9G2kiL64HM1gIbtMjdTzzR/view?usp=sharing"> Maintenance Manual </a>](maintenance_manual.pdf) - Instructions on how to maintain the project. 
