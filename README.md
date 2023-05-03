@@ -104,21 +104,21 @@ The trained model (.pt and .onnx) is stored in the https://drive.google.com/driv
 
 ### Running the IR Model 
 
-1. Go to Download Intel® Distribution of OpenVINO™ Toolkit 
+1. Go to [https://www.intel.com/content/www/us/en/developer/tools/openvino-toolkit/download.html](Download Intel® Distribution of OpenVINO™ Toolkit) 
 
 2. Choose ‘Runtime’, your OS type, version ‘2022.3’, distribution ‘PIP’ and follow the installation guide given on the page 
 
-*Suggested to use Python version 3.9 
+    *Suggested to use Python version 3.9 
 
 2. Navigate to openvino_env 
 
-3. Download ‘IRscript.py’ from this repository, the trained model from the google drive, and place in openvino_env directory 
+3. Download ‘detect-ir.py’ from this repository, the trained model from the google drive, and place in openvino_env directory 
 
 4. Create a text file named `class_labels.txt` 
 
 5. Navigate to openvino_env/images and place the image(s) you want to run inference on 
 
-5. Run `python IRscript.py` to run inference 
+5. Run `python detect-ir.py` to run inference 
 
  
 
