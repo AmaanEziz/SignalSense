@@ -110,15 +110,17 @@ The trained model (.pt and .onnx) is stored in the https://drive.google.com/driv
 
     *Suggested to use Python version 3.9 
 
-2. Navigate to openvino_env 
+3. Navigate to openvino_env 
 
-3. Download ‘detect-ir.py’ from this repository, the trained model from the google drive, and place in openvino_env directory 
+4. Download ‘detect-ir.py’ from this repository, the trained model from the google drive, and place in openvino_env directory 
 
-4. Create a text file named `class_labels.txt` 
+5. Create a text file named `class_labels.txt` 
 
-5. Navigate to openvino_env/images and place the image(s) you want to run inference on 
+6. Navigate to openvino_env/images and place the image(s) you want to run inference on
 
-5. Run `python detect-ir.py` to run inference 
+7. Navigate back to openvino_env
+
+8. Run `python detect-ir.py` to run inference 
 
  
 
