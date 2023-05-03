@@ -104,7 +104,7 @@ The trained model (.pt and .onnx) is stored in the https://drive.google.com/driv
 
 ### Running the IR Model 
 
-1. Go to [https://www.intel.com/content/www/us/en/developer/tools/openvino-toolkit/download.html](Download Intel® Distribution of OpenVINO™ Toolkit) 
+1. Go to [Download Intel® Distribution of OpenVINO™ Toolkit](https://www.intel.com/content/www/us/en/developer/tools/openvino-toolkit/download.html) 
 
 2. Choose ‘Runtime’, your OS type, version ‘2022.3’, distribution ‘PIP’ and follow the installation guide given on the page 
 
