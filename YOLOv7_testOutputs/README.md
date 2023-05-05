@@ -1,4 +1,4 @@
-<h1>YOLOv7 Benchmarking</h1>
+<h1>YOLOv7 Test Outputs</h1>
 
 This directory contains benchmarking charts as well as all test outputs for the ML Model, YOLOv7, in the following formats:
 - PyTorch (base model)
