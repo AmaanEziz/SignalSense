@@ -7,26 +7,38 @@ import onnxruntime as ort
 from PIL import Image
 from pathlib import Path
 from collections import OrderedDict,namedtuple
-import datetime
+from datetime import datetime
 import os
 from pathlib import Path
 from utils.general import increment_path
 from array import array
 import openpyxl #needed for excel data write
 
-#Opens existing excel file
-workbook_name = "../yolov7/data.xml" #replace with path to excel file
+
+###################### OPEN EXCEL ##########################
+#         This opens an existing excel sheet               #
+############################################################
+workbook_name = "C:/Users/mindy/yolov7env/Scripts/yolov7/data1.xlsx"
 wb = openpyxl.load_workbook(workbook_name)
 ws = wb['Sheet1']
 ws = wb.active
 new_data = []
 
+
+###################### LOAD MODEL FILES ##########################
+# This loads an existing model file and provides libraries that  #
+# are needed to run the inference.                               #
+##################################################################
 cuda = True
-w = "../best.onnx" #replace with path to model file
+w = "C:/Users/mindy/yolov7env/Scripts/yolov7/best.onnx" #replace with path to model file
 
 providers = ['CUDAExecutionProvider', 'CPUExecutionProvider'] if cuda else ['CPUExecutionProvider']
 session = ort.InferenceSession(w, providers=providers)
 
+
+###################### RESIZE IMG #########################
+# This resizes the image for inference and for drawing.   #
+###########################################################
 def letterbox(im, new_shape=(640, 640), color=(114, 114, 114), auto=True, scaleup=True, stride=32):
     # Resize and pad image while meeting stride-multiple constraints
     shape = im.shape[:2]  # current shape [height, width]
@@ -56,17 +68,20 @@ def letterbox(im, new_shape=(640, 640), color=(114, 114, 114), auto=True, scaleu
 
     return im, r, (dw, dh)
 
-# Define name-color dictionary
+
+###################### DICTIONARY ##########################
+# This creates a bit stream and a color dictionary for the #
+# cooresponding labels.                                    #
+############################################################
 name_colors = {
-    'green': [0, 255, 0],
-    'left-green': [0, 255, 0],
+    'green': [18, 138, 18],
+    'left-green': [18, 138, 18],
     'left-red': [255, 0, 0],
-    'left-yellow': [255, 255, 0],
+    'left-yellow': [171, 148, 32],
     'red': [255, 0, 0],
-    'yellow': [255, 255, 0]
+    'yellow': [171, 148, 32]
 }
 
-# Define name-bits dictionary
 name_bits = {
     'green': 0x00000001,
     'left-green': 0x00000010,
@@ -77,9 +92,13 @@ name_bits = {
 }
 
 
-# Set the path to the directory containing the images to be processed
-image_dir = "../yolov7/inference/images" #replace with path to test images
-parent_dir = Path("../yolov7/runs/detect") #replace with path to yolov7/runs/detect directory
+############################ FILE PATHS ##################################
+# This sets the path to directory containing the images to be processed. #
+# This also sets the path to directory where inferred images will be     #
+# saved to.                                                              #
+##########################################################################
+image_dir = "C:/Users/mindy/yolov7env/Scripts/yolov7/inference/images" #replace with path to test images
+parent_dir = Path("C:/Users/mindy/yolov7env/Scripts/yolov7/runs/detect")
 
 # Define the base name of the directory
 base_name = 'exp'
@@ -96,7 +115,12 @@ while True:
 # Create the new directory
 new_dir.mkdir()
 
-# Iterate through each file in the directory
+
+######################## INFERENCE ############################
+# This takes in the following: image directory, model file.   #
+# It runs inference on the images in the provided directory   #
+# using the model file provided.                              #
+###############################################################
 for filename in os.listdir(image_dir):
     if filename.endswith(".jpg") or filename.endswith(".png"):
         # Load the image
@@ -111,7 +135,7 @@ for filename in os.listdir(image_dir):
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
         #start time
-        start_time = datetime.datetime.now()
+        start_time = datetime.now()
 
         image = img.copy()
         image, ratio, dwdh = letterbox(image, auto=False)
@@ -135,7 +159,7 @@ for filename in os.listdir(image_dir):
 
         bit = ''
 
-        end_time = datetime.datetime.now()
+        end_time = datetime.now()
         time_elapsed = end_time - start_time
         total_seconds_elapsed = time_elapsed.total_seconds()
 
@@ -154,12 +178,13 @@ for filename in os.listdir(image_dir):
 
                 bit += f"{bits[names[cls_id]]:0{8}x}"
 
-                print()
                 print('Score of '+name+': '+str(score))
                 name += ' '+str(score)
                 cv2.rectangle(image,box[:2],box[2:],color,2)
                 cv2.putText(image,name,(box[0], box[1] - 2),cv2.FONT_HERSHEY_SIMPLEX,0.75, color,thickness=2)  
-                infer_info = [filename, name, score, total_seconds_elapsed * 1000, 'onnx', f"{bits[names[cls_id]]:0{8}x}"]  
+
+                #Saves data for excel sheet
+                infer_info = [filename, name, score, total_seconds_elapsed * 1000, 'onnx', f"{bits[names[cls_id]]:0{8}x}", datetime.now()]  
                 new_data.append(infer_info)
 
         Image.fromarray(ori_images[0])
@@ -171,9 +196,14 @@ for filename in os.listdir(image_dir):
         output_filename = os.path.join(new_dir, f"{filename}")
         Image.fromarray(ori_images[0]).save(output_filename)
         print(f" The image with the result is saved in: {new_dir}")
+        print("=============================================================")
 
-#Write to existing excel file
-    for info in new_data:
-        ws.append(info)
 
-    wb.save(filename = workbook_name)
+##################### WRITE EXCEL ##########################
+#        This writes to an existing excel sheet            #
+############################################################
+for info in new_data:
+    ws.append(info)
+
+wb.save(filename = workbook_name)
+

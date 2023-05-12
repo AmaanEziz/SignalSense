@@ -1,6 +1,7 @@
 import argparse
 import time
 from pathlib import Path
+from datetime import datetime
 
 import cv2
 import torch
@@ -15,12 +16,29 @@ from utils.plots import plot_one_box
 from utils.torch_utils import select_device, load_classifier, time_synchronized, TracedModel
 import openpyxl #needed for excel data write
 
-#needed for excel data write
-workbook_name = "C:/Users/mindy/yolov7env/Scripts/yolov7/data.xlsx"
+
+###################### OPEN EXCEL ##########################
+#         This opens an existing excel sheet               #
+############################################################
+workbook_name = "C:/Users/ludas/yolov7env/Scripts/yolov7/data.xlsx"
 wb = openpyxl.load_workbook(workbook_name)
 ws = wb['Sheet1']
 ws = wb.active
 new_data = []
+
+
+###################### DICTIONARY ##########################
+# This creates a bit stream and a color dictionary for the #
+# cooresponding labels.                                    #
+############################################################
+name_colors = {
+    'green': [18, 138, 18],
+    'left-green': [18, 138, 18],
+    'left-red': [0, 0, 255],
+    'left-yellow': [32, 148, 171],
+    'red': [0, 0, 255],
+    'yellow': [32, 148, 171]
+}
 
 name_bits = {
     'green': 0x00000001,
@@ -31,6 +49,12 @@ name_bits = {
     'yellow': 0x00000002
 }
 
+
+######################## INFERENCE ############################
+# This takes in the following: image directory, model file.   #
+# It runs inference on the images in the provided directory   #
+# using the model file provided.                              #
+###############################################################
 def detect(save_img=False):
     source, weights, view_img, save_txt, imgsz, trace = opt.source, opt.weights, opt.view_img, opt.save_txt, opt.img_size, not opt.no_trace
     save_img = not opt.nosave and not source.endswith('.txt')  # save inference images
@@ -74,7 +98,7 @@ def detect(save_img=False):
 
     # Get names and colors
     names = model.module.names if hasattr(model, 'module') else model.names
-    colors = [[random.randint(0, 255) for _ in range(3)] for _ in names]
+    colors = {name:name_colors[name] for name in names}
     bits = {name:name_bits[name] for name in names}
 
     # Run inference
@@ -113,6 +137,9 @@ def detect(save_img=False):
         if classify:
             pred = apply_classifier(pred, modelc, img, im0s)
 
+        bit = ''
+        dt = datetime.now()
+
         # Process detections
         for i, det in enumerate(pred):  # detections per image
             if webcam:  # batch_size >= 1
@@ -145,14 +172,18 @@ def detect(save_img=False):
 
                     if save_img or view_img:  # Add bbox to image
                         label = f'{names[int(cls)]} {conf:.2f}'
-                        plot_one_box(xyxy, im0, label=label, color=colors[int(cls)], line_thickness=1)
+                        plot_one_box(xyxy, im0, label=label, color=colors[names[int(cls)]], line_thickness=1)
                     
                     bit += f"{bits[names[int(cls)]]:0{8}x}"
+
+                    dt = datetime.now()
 
                     string = str(conf)
                     string = string.lstrip("tensor(")
                     string = string.rstrip(")")
-                    infer_info = [p.name, names[int(cls)], string, (1E3 * (t2 - t1)), 'pytorch', f"{bits[names[int(cls)]]:0{8}x}"]  
+
+                    #Saves data for excel sheet
+                    infer_info = [p.name, names[int(cls)], string, (1E3 * (t2 - t1)), 'pytorch', f"{bits[names[int(cls)]]:0{8}x}", dt]  
                     new_data.append(infer_info)
 
             # Print time (inference + NMS)
@@ -183,14 +214,19 @@ def detect(save_img=False):
                             save_path += '.mp4'
                         vid_writer = cv2.VideoWriter(save_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (w, h))
                     vid_writer.write(im0)
+            print("=============================================================")
 
     if save_txt or save_img:
         s = f"\n{len(list(save_dir.glob('labels/*.txt')))} labels saved to {save_dir / 'labels'}" if save_txt else ''
         #print(f"Results saved to {save_dir}{s}")
 
+    print("=============================================================")
     print(f'Done. ({time.time() - t0:.3f}s)')
+    print(datetime.now())
 
-    #needed for excel data write
+    ##################### WRITE EXCEL ##########################
+    #        This writes to an existing excel sheet            #
+    ############################################################
     for info in new_data:
         ws.append(info)
 
