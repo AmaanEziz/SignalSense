@@ -312,6 +312,7 @@ input:disabled {
 <script>
 
  $(document).ready(function () {
+ $("#intersectionBtn").on("click",()=>{sessionStorage.setItem('nodeId', document.getElementById("device-option").value)})
  $.getJSON('https://signalsense.link/api/node/list', function (data) {
     for (let i = 0; i < data.length; i++) {
         if (data[i].nodeID == `8f65b638-c41b-11ec-a763-0242ac120002`) {
@@ -546,7 +547,7 @@ var getBase64fromFile = function(file) {
                     </form>
                   </select>
                   <a href="device.html" role="button" class="btn btn-primary btn-lg">
-                    <button type="button" class="btn btn-primary">
+                    <button id="intersectionBtn" type="button" class="btn btn-primary">
                         Next
                       </button></a>
                 <h1>Or</h1>

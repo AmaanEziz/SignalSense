@@ -66,6 +66,7 @@ $.getJSON(`https://signalsense.link/api/node/light?nodeId=${stateUniNodeId}` , f
     addRowHandlers();
     updateArrowPhase(data);
 });
+console.log("device id is " + deviceId);
 if (deviceId == stateUniNodeId) {
     var imageSrc = `https://signalsense.link/api/node/getImage?nodeId=${deviceId}`;
     $('#intersection-img').attr("src", imageSrc);
